@@ -1,3 +1,6 @@
 [submodule "core"]
 	path = core
 	url = ../sv_core.git
+[submodule "dependencies"]
+	path = dependencies
+	url = ../sv_dependencies.git
