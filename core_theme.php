@@ -1,9 +1,9 @@
 <?php
-namespace sv_100;
+namespace sv100;
 
 /**
  * @author			straightvisions GmbH
- * @package			sv_100
+ * @package			sv100
  * @copyright       2019 straightvisions GmbH
  * @link			https://straightvisions.com
  * @since			1.0
@@ -13,8 +13,8 @@ namespace sv_100;
 require_once( 'core/core.php' );
 
 class init extends \sv_core\core {
-	const version 						= 3048;
-	const version_core_match 			= 3200;
+	const version 						= 4000;
+	const version_core_match 			= 4000;
 	
 	public static $is_child_theme 		= false;
 	private $modules_registered 		= array();
@@ -34,10 +34,10 @@ class init extends \sv_core\core {
 			return false;
 		}
 		
-		load_theme_textdomain( 'straightvisions-100', get_template_directory() . '/languages' );
+		load_theme_textdomain( 'sv100', get_template_directory() . '/languages' );
 		
 		$this->set_section_title( 'SV 100' );
-		$this->set_section_desc( 'straightvisions 100 Theme' );
+		$this->set_section_desc( 'SV 100 Theme' );
 		
 		static::$active_theme_path = trailingslashit( get_stylesheet_directory() );
 		static::$parent_theme_path = trailingslashit( get_template_directory() );
@@ -52,7 +52,7 @@ class init extends \sv_core\core {
 	public function wordpress_version_notice() {
 		echo '<div class="error"><p>';
 		/* translators: %s: Minimum required version */
-		printf( __( '%1$s requires WordPress %2$s or later to function properly. Please upgrade WordPress before activating %3$s.', 'straightvisions-100' ), $this->get_section_title(),'5.0.0', $this->get_section_title() );
+		printf( __( '%1$s requires WordPress %2$s or later to function properly. Please upgrade WordPress before activating %3$s.', 'sv100' ), $this->get_section_title(),'5.0.0', $this->get_section_title() );
 		echo '</p></div>';
 	}
 	
@@ -409,12 +409,12 @@ class init extends \sv_core\core {
 		return $this->get_root()::$modules_loaded;
 	}
 	protected function is_module_loaded(string $name): bool{
-		return isset($this->get_root()::$modules_loaded['sv_100_'.$name]) ? true : false;
+		return isset($this->get_root()::$modules_loaded['sv100_'.$name]) ? true : false;
 	}
 
 	public function get_module( string $name ) {
 		if($this->is_module_loaded($name)){
-			return $this->get_root()::$modules_loaded['sv_100_'.$name];
+			return $this->get_root()::$modules_loaded['sv100_'.$name];
 		}
 
 		$this->load_module($name, trailingslashit($this->get_parent_theme_path() . 'lib/modules/'.$name), trailingslashit( $this->get_parent_theme_url() . 'lib/modules/'.$name ));
@@ -430,7 +430,7 @@ class init extends \sv_core\core {
 		$settings = array();
 		
 		foreach ( $this->get_modules_loaded() as $prefix => $module ) {
-			if ( $prefix !== 'sv_100_sv_settings' && ! empty( $module->s ) ) {
+			if ( $prefix !== 'sv100_sv_settings' && ! empty( $module->s ) ) {
 				$module_settings = array();
 				
 				foreach ( $module->s as $setting => $value ) {
@@ -475,4 +475,4 @@ class init extends \sv_core\core {
 	}
 }
 
-$GLOBALS['sv_100'] = new init();
+$GLOBALS['sv100'] = new init();
