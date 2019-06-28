@@ -48,6 +48,17 @@ class init extends \sv_core\core {
 		
 		$this->wordpress_version_check( '5.0.0' );
 	}
+	public function build_sections(){
+		add_theme_page(
+			$this->get_section_title(),		// page title
+			$this->get_section_title(),		// menu title
+			'manage_options',		// capability
+			$this->get_prefix(),			// menu slug
+			function(){	// callable function
+				$this->load_page();
+			}
+		);
+	}
 	
 	public function wordpress_version_notice() {
 		echo '<div class="error"><p>';
