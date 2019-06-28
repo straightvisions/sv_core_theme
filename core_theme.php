@@ -28,6 +28,7 @@ class init extends \sv_core\core {
 	private $first_load					= false;
 	
 	protected static $scripts_loaded 	= false;
+	protected static $theme_core_initialized			= false;
 	
 	public function init() {
 		if(!$this->setup( __NAMESPACE__, __FILE__ . '../' )){
@@ -48,18 +49,6 @@ class init extends \sv_core\core {
 		
 		$this->wordpress_version_check( '5.0.0' );
 	}
-	public function build_sections(){
-		add_theme_page(
-			$this->get_section_title(),		// page title
-			$this->get_section_title(),		// menu title
-			'manage_options',		// capability
-			$this->get_prefix(),			// menu slug
-			function(){	// callable function
-				$this->load_page();
-			}
-		);
-	}
-	
 	public function wordpress_version_notice() {
 		echo '<div class="error"><p>';
 		/* translators: %s: Minimum required version */
@@ -483,6 +472,24 @@ class init extends \sv_core\core {
 	
 	protected function is_first_load() {
 		return $this->get_root()->first_load;
+	}
+	protected function init_subcore(){
+		if ( !static::$theme_core_initialized ) {
+			static::$theme_core_initialized = true;
+			
+			add_action( 'admin_menu', array( $this , 'add_theme_page' ), 100 );
+		}
+	}
+	public function add_theme_page(){
+		\add_theme_page(
+			$this->get_section_title(),		// page title
+			$this->get_section_title(),		// menu title
+			'manage_options',		// capability
+			$this->get_prefix(),			// menu slug
+			function(){	// callable function
+				$this->load_page();
+			}
+		);
 	}
 }
 
