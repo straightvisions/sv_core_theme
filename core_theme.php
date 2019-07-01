@@ -37,8 +37,8 @@ class init extends \sv_core\core {
 		
 		load_theme_textdomain( 'sv100', get_template_directory() . '/languages' );
 		
-		$this->set_section_title( 'SV 100' );
-		$this->set_section_desc( 'SV 100 Theme' );
+		$this->set_section_title( 'SV100' );
+		$this->set_section_desc( 'SV100 Theme' );
 		
 		static::$active_theme_path = trailingslashit( get_stylesheet_directory() );
 		static::$parent_theme_path = trailingslashit( get_template_directory() );
