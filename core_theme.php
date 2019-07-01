@@ -13,8 +13,8 @@ namespace sv100;
 require_once( 'core/core.php' );
 
 class init extends \sv_core\core {
-	const version 						= 4002;
-	const version_core_match 			= 4002;
+	const version 						= 4003;
+	const version_core_match 			= 4003;
 	
 	public static $is_child_theme 		= false;
 	private $modules_registered 		= array();
@@ -30,15 +30,15 @@ class init extends \sv_core\core {
 	protected static $scripts_loaded 	= false;
 	protected static $theme_core_initialized			= false;
 	
-	public function init() {
+	public function load() {
 		if(!$this->setup( __NAMESPACE__, __FILE__ . '../' )){
 			return false;
 		}
 		
 		load_theme_textdomain( 'sv100', get_template_directory() . '/languages' );
 		
-		$this->set_section_title( 'SV 100' );
-		$this->set_section_desc( 'SV 100 Theme' );
+		$this->set_section_title( 'SV100' );
+		$this->set_section_desc( 'SV100 Theme' );
 		
 		static::$active_theme_path = trailingslashit( get_stylesheet_directory() );
 		static::$parent_theme_path = trailingslashit( get_template_directory() );
@@ -494,3 +494,4 @@ class init extends \sv_core\core {
 }
 
 $GLOBALS['sv100'] = new init();
+$GLOBALS['sv100']->load();
