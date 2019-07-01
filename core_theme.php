@@ -13,8 +13,8 @@ namespace sv100;
 require_once( 'core/core.php' );
 
 class init extends \sv_core\core {
-	const version 						= 4002;
-	const version_core_match 			= 4002;
+	const version 						= 4003;
+	const version_core_match 			= 4003;
 	
 	public static $is_child_theme 		= false;
 	private $modules_registered 		= array();
@@ -30,7 +30,7 @@ class init extends \sv_core\core {
 	protected static $scripts_loaded 	= false;
 	protected static $theme_core_initialized			= false;
 	
-	public function init() {
+	public function load() {
 		if(!$this->setup( __NAMESPACE__, __FILE__ . '../' )){
 			return false;
 		}
@@ -494,3 +494,4 @@ class init extends \sv_core\core {
 }
 
 $GLOBALS['sv100'] = new init();
+$GLOBALS['sv100']->load();
