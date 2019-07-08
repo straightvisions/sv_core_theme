@@ -220,14 +220,20 @@ class init extends \sv_core\core {
 	}
 	
 	public function get_path( $path = '' ): string {
+		if($this->get_module_name() != 'init'){
+			$module			= 'modules/'.$this->get_module_name() . '/';
+		}else {
+			$module			= '';
+		}
+		
 		if ( $this->is_child_theme() ) {
-			$active_theme_file_path = $this->get_active_theme_path() . 'lib/modules/' . $this->get_module_name() . '/' . $path;
+			$active_theme_file_path = $this->get_active_theme_path() . 'lib/'. $module.$path;
 			if ( file_exists( $active_theme_file_path ) ) {
 				return $active_theme_file_path;
 			}
 		}
 		
-		$root_theme_file_path = $this->get_parent_theme_path() . 'lib/modules/' . $this->get_module_name() . '/' . $path;
+		$root_theme_file_path = $this->get_parent_theme_path() . 'lib/' . $module . $path;
 		
 		return $root_theme_file_path;
 	}
@@ -348,6 +354,134 @@ class init extends \sv_core\core {
 				$this->load_page();
 			}
 		);
+	}
+	protected function settings_draft_font(){
+		$fonts			= array( '' => __( 'choose...', 'sv100' ) );
+		$font_array 	= $this->get_module( 'sv_webfontloader') ? $this->get_module( 'sv_webfontloader')->get_setting( 'fonts' )->run_type()->get_data() : '';
+		
+		if ( $font_array ) {
+			foreach( $font_array as $font ) {
+				$fonts[ $font['entry_label'] ]		= $font['entry_label'];
+			}
+		}
+		
+		$this->s['font_family'] =
+			$this->get_setting()
+				 ->set_ID( 'font_family' )
+				 ->set_title( __( 'Font Family', 'sv100' ) )
+				 ->set_description( __( 'Base font for all frontend elements.', 'sv100' ) )
+				 ->load_type( 'select' )
+				 ->set_options( $fonts );
+		
+		$this->s['font_size'] =
+			$this->get_setting()
+				 ->set_ID( 'font_size' )
+				 ->set_title( __( 'Font Size', 'sv100' ) )
+				 ->set_description( __( 'Default Font Size in Pixel', 'sv100' ) )
+				 ->set_default_value( 16 )
+				 ->load_type( 'number' );
+		
+		$this->s['font_color'] =
+			$this->get_setting()
+				 ->set_ID( 'font_color' )
+				 ->set_title( __( 'Font Color', 'sv100' ) )
+				 ->set_description( __( 'Default Font Color', 'sv100' ) )
+				 ->set_default_value( '#000000' )
+				 ->load_type( 'color' );
+		
+		$this->s['font_line_height'] =
+			$this->get_setting()
+				 ->set_ID( 'font_line_height' )
+				 ->set_title( __( 'Font Line Height', 'sv100' ) )
+				 ->set_description( __( 'Default Line Height in Pixel', 'sv100' ) )
+				 ->set_default_value( 23 )
+				 ->load_type( 'number' );
+		
+		return $this;
+	}
+	protected function settings_draft_background(){
+		$this->s['background_color'] =
+			$this->get_setting()
+				 ->set_ID( 'background_color' )
+				 ->set_title( __( 'Background Color', 'sv100' ) )
+				 ->set_description( __( 'Background Color for Body', 'sv100' ) )
+				 ->set_default_value( '#FFFFFF' )
+				 ->load_type( 'color' );
+		
+		$this->s['background_image'] =
+			$this->get_setting()
+				 ->set_ID( 'background_image' )
+				 ->set_title( __('Background Image', 'sv100' ) )
+				 ->set_description( __( 'Background Image for Body', 'sv100' ) )
+				 ->load_type( 'upload' );
+		
+		$this->s['background_image_media_size'] =
+			$this->get_setting()
+				 ->set_ID( 'background_image_media_size' )
+				 ->set_title( __( 'Background Image Media Size', 'sv100' ) )
+				 ->set_description( __( 'Background Image Media Size for Body', 'sv100' ) )
+				 ->set_default_value( 'large' )
+				 ->load_type( 'select' )
+				 ->set_options( array_combine( get_intermediate_image_sizes(), get_intermediate_image_sizes() ) );
+		
+		$this->s['background_image_position'] =
+			$this->get_setting()
+				 ->set_ID( 'background_image_position' )
+				 ->set_title( __( 'Background Position', 'sv100' ) )
+				 ->set_description( __( 'Background Image Position Value', 'sv100' ) )
+				 ->set_placeholder( 'center top' )
+				 ->set_default_value( 'center top' )
+				 ->load_type( 'text' );
+		
+		$this->s['background_image_size'] =
+			$this->get_setting()
+				 ->set_ID( 'background_image_size' )
+				 ->set_title( __( 'Background Size', 'sv100' ) )
+				 ->set_description( __( 'Background Image Size Value', 'sv100' ) )
+				 ->set_placeholder( 'cover' )
+				 ->set_default_value( 'cover' )
+				 ->load_type( 'text' );
+		
+		$this->s['background_image_repeat'] =
+			$this->get_setting()
+				 ->set_ID( 'background_image_repeat' )
+				 ->set_title( __( 'Background Repeat', 'sv100' ) )
+				 ->set_description( __( 'Background Image Repeat', 'sv100' ) )
+				 ->set_default_value( 'no-repeat' )
+				 ->load_type( 'select' )
+				 ->set_options(
+					 array(
+						 '' 			=> __( 'choose...', 'sv100' ),
+						 'repeat' 	=> 'repeat',
+						 'repeat-x' 	=> 'repeat-x',
+						 'repeat-y' 	=> 'repeat-y',
+						 'no-repeat' => 'no-repeat',
+						 'space' 	=> 'space',
+						 'round' 	=> 'round',
+						 'initial' 	=> 'initial',
+						 'inherit' 	=> 'inherit'
+					 )
+				 );
+		
+		$this->s['background_image_attachment'] =
+			$this->get_setting()
+				 ->set_ID( 'background_image_attachment' )
+				 ->set_title( __( 'Background Attachment', 'sv100' ) )
+				 ->set_description( __( 'Background Image Attachment', 'sv100' ) )
+				 ->set_default_value( 'fixed' )
+				 ->load_type( 'select' )
+				 ->set_options(
+					 array(
+						 '' 			=> __('choose...', 'sv100'),
+						 'scroll' 	=> 'scroll',
+						 'fixed' 	=> 'fixed',
+						 'local' 	=> 'local',
+						 'initial' 	=> 'initial',
+						 'inherit' 	=> 'inherit'
+					 )
+				 );
+		
+		return $this;
 	}
 }
 
