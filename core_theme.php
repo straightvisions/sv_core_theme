@@ -108,17 +108,14 @@ class init extends \sv_core\core {
 			$this->set_modules_registered( $module );
 		}
 		
-		$this->load_module( 'sv_settings', $this->get_parent_theme_path() . 'lib/modules/sv_settings/', trailingslashit( $this->get_parent_theme_url() . 'lib/modules/sv_settings' ) );
 		$this->load_module( 'sv_colors', $this->get_parent_theme_path() . 'lib/modules/sv_colors/', trailingslashit( $this->get_parent_theme_url() . 'lib/modules/sv_colors' ) );
-		$this->load_module( 'sv_webfontloader', $this->get_parent_theme_path() . 'lib/modules/sv_webfontloader/', trailingslashit( $this->get_parent_theme_url() . 'lib/modules/sv_webfontloader' ) );
 		$this->load_module( 'sv_common', $this->get_parent_theme_path() . 'lib/modules/sv_common/', trailingslashit( $this->get_parent_theme_url() . 'lib/modules/sv_common' ) );
-		$this->load_module( 'sv_navigation', $this->get_parent_theme_path() . 'lib/modules/sv_navigation/', trailingslashit( $this->get_parent_theme_url() . 'lib/modules/sv_navigation' ) );
-		$this->load_module( 'sv_sidebar', $this->get_parent_theme_path() . 'lib/modules/sv_sidebar/', trailingslashit( $this->get_parent_theme_url() . 'lib/modules/sv_sidebar' ) );
 		$this->load_module( 'sv_header', $this->get_parent_theme_path() . 'lib/modules/sv_header/', trailingslashit( $this->get_parent_theme_url() . 'lib/modules/sv_header' ) );
 		$this->load_module( 'sv_content', $this->get_parent_theme_path() . 'lib/modules/sv_content/', trailingslashit( $this->get_parent_theme_url() . 'lib/modules/sv_content' ) );
 		$this->load_module( 'sv_footer', $this->get_parent_theme_path() . 'lib/modules/sv_footer/', trailingslashit( $this->get_parent_theme_url() . 'lib/modules/sv_footer' ) );
 		$this->load_module( 'sv_modules', $this->get_parent_theme_path() . 'lib/modules/sv_modules/', trailingslashit( $this->get_parent_theme_url() . 'lib/modules/sv_modules' ) );
-
+		
+		/*
 		if(isset($this->sv_modules
 				->load_settings()
 				->get_settings()['sv_settings'])) { // check for this to prevent fatal error if a sv_settings is not present
@@ -132,6 +129,7 @@ class init extends \sv_core\core {
 				->run_type()
 				->set_data(1);
 		}
+		*/
 		
 		$this->sv_modules
 			->load_settings()
@@ -145,39 +143,9 @@ class init extends \sv_core\core {
 		
 		$this->sv_modules
 			->load_settings()
-			->get_settings()['sv_webfontloader']
-			->set_title( $this->get_root()->sv_webfontloader->get_module_title() )
-			->set_description( $this->get_root()->sv_webfontloader->get_module_desc() )
-			->load_type( 'checkbox' )
-			->set_disabled( true )
-			->run_type()
-			->set_data( 1 );
-		
-		$this->sv_modules
-			->load_settings()
 			->get_settings()['sv_common']
 			->set_title( $this->get_root()->sv_common->get_module_title() )
 			->set_description( $this->get_root()->sv_common->get_module_desc() )
-			->load_type( 'checkbox' )
-			->set_disabled( true )
-			->run_type()
-			->set_data( 1 );
-		
-		$this->sv_modules
-			->load_settings()
-			->get_settings()['sv_navigation']
-			->set_title( $this->get_root()->sv_navigation->get_module_title() )
-			->set_description( $this->get_root()->sv_navigation->get_module_desc() )
-			->load_type( 'checkbox' )
-			->set_disabled( true )
-			->run_type()
-			->set_data( 1 );
-		
-		$this->sv_modules
-			->load_settings()
-			->get_settings()['sv_sidebar']
-			->set_title( $this->get_root()->sv_sidebar->get_module_title() )
-			->set_description( $this->get_root()->sv_sidebar->get_module_desc() )
 			->load_type( 'checkbox' )
 			->set_disabled( true )
 			->run_type()
@@ -228,12 +196,8 @@ class init extends \sv_core\core {
 			$path = trailingslashit( $module );
 			$url  = trailingslashit( $this->get_parent_theme_url() . 'lib/modules/' . $name );
 			
-			if ( $name != 'sv_settings'
-				 && $name != 'sv_colors'
-				 && $name != 'sv_webfontloader'
+			if ( $name != 'sv_colors'
 				 && $name != 'sv_common'
-				 && $name != 'sv_navigation'
-				 && $name != 'sv_sidebar'
 				 && $name != 'sv_header'
 				 && $name != 'sv_content'
 				 && $name != 'sv_footer'
@@ -260,27 +224,11 @@ class init extends \sv_core\core {
 		}
 		
 		/* required Modules */
-		if ( $name === 'sv_settings' ) {
-			return true;
-		}
-		
 		if ( $name === 'sv_colors' ) {
 			return true;
 		}
 		
-		if ( $name === 'sv_webfontloader' ) {
-			return true;
-		}
-		
 		if ( $name === 'sv_common' ) {
-			return true;
-		}
-		
-		if ( $name === 'sv_navigation' ) {
-			return true;
-		}
-		
-		if ( $name === 'sv_sidebar' ) {
 			return true;
 		}
 		
@@ -313,12 +261,12 @@ class init extends \sv_core\core {
 		return false;
 	}
 	
-	public function load_module( string $name, string $path, string $url ): bool {
+	public function load_module( string $name, string $path, string $url, $no_check = false ): bool {
 		if($this->is_module_loaded($name)){ // already loaded
 			return true;
 		}
 
-		if ( $this->load_module_check( $name, $path ) ) {
+		if ( $no_check || $this->load_module_check( $name, $path ) ) {
 			require_once( $path . $name . '.php' );
 			
 			// Checks for child theme & child module
@@ -332,13 +280,13 @@ class init extends \sv_core\core {
 				require_once( $child_path . $name . '.php' );
 				
 				$this->$name = new $child_class_name();
-				$this->$name->set_name( $this->get_prefix( $this->$name->get_module_name() ) );
+				$this->$name->set_name( $this->get_root()->get_prefix( $this->$name->get_module_name() ) );
 				$this->$name->set_path( $child_path );
 				$this->$name->set_url( $child_url );
 			} else {
-				$class_name  = $this->get_name() . '\\' . $name;
+				$class_name  = $this->get_root()->get_name() . '\\' . $name;
 				$this->$name = new $class_name();
-				$this->$name->set_name( $this->get_prefix( $this->$name->get_module_name() ) );
+				$this->$name->set_name( $this->get_root()->get_prefix( $this->$name->get_module_name() ) );
 				$this->$name->set_path( $path );
 				$this->$name->set_url( $url );
 			}
@@ -412,14 +360,14 @@ class init extends \sv_core\core {
 		return isset($this->get_root()::$modules_loaded['sv100_'.$name]) ? true : false;
 	}
 
-	public function get_module( string $name ) {
+	public function get_module( string $name, $no_check = false ) {
 		if($this->is_module_loaded($name)){
 			return $this->get_root()::$modules_loaded['sv100_'.$name];
 		}
 
-		$this->load_module($name, trailingslashit($this->get_parent_theme_path() . 'lib/modules/'.$name), trailingslashit( $this->get_parent_theme_url() . 'lib/modules/'.$name ));
+		$loaded = $this->load_module($name, trailingslashit($this->get_parent_theme_path() . 'lib/modules/'.$name), trailingslashit( $this->get_parent_theme_url() . 'lib/modules/'.$name ), $no_check );
 
-		if(isset($this->get_root()->get_modules_loaded()[ $name ])){
+		if($loaded){
 			return $this->get_root()->get_modules_loaded()[ $name ];
 		}
 
