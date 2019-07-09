@@ -437,10 +437,27 @@ class init extends \sv_core\core {
 			$this->get_setting()
 				 ->set_ID( 'background_image_size' )
 				 ->set_title( __( 'Background Size', 'sv100' ) )
-				 ->set_description( __( 'Background Image Size Value', 'sv100' ) )
-				 ->set_placeholder( 'cover' )
+				 ->set_placeholder( '0 ' )
+				 ->set_description(
+				 	'<p>' . __( 'Background Image Size in Pixel', 'sv100' ) . '<br>
+					' . __( 'If disabled Background Image Fit will take effect.', 'sv100' ) . '</p>
+					<p><strong>' . __( '0 = Disabled', 'sv100' ) . '</strong></p>'
+				 )
+				 ->set_min( 0 )
+				 ->set_default_value( 0 )
+				 ->load_type( 'number' );
+		
+		$this->s['background_image_fit'] =
+			$this->get_setting()
+				 ->set_ID( 'background_image_fit' )
+				 ->set_title( __( 'Background Fit', 'sv100' ) )
+				 ->set_description( __( 'Background Image Fit', 'sv100' ) )
 				 ->set_default_value( 'cover' )
-				 ->load_type( 'text' );
+				 ->set_options( array(
+				 	'contain' 		=> __( 'Contain', 'sv100' ),
+					'cover'			=> __( 'Cover', 'sv100' ),
+				 ) )
+				 ->load_type( 'select' );
 		
 		$this->s['background_image_repeat'] =
 			$this->get_setting()
