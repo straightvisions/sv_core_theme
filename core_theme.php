@@ -365,6 +365,7 @@ class init extends \sv_core\core {
 			}
 		}
 		
+		// General
 		$this->s['font_family'] =
 			$this->get_setting()
 				 ->set_ID( 'font_family' )
@@ -396,6 +397,146 @@ class init extends \sv_core\core {
 				 ->set_description( __( 'Default Line Height in Pixel', 'sv100' ) )
 				 ->set_default_value( 23 )
 				 ->load_type( 'number' );
+		
+		$this->s['text_decoration'] =
+			$this->get_setting()
+				 ->set_ID( 'text_decoration' )
+				 ->set_title( __( 'Text Decoration', 'sv100' ) )
+				 ->set_description( __( 'Default Link Text Decoration', 'sv100' ) )
+				 ->set_default_value( 'none' )
+				 ->set_options( array(
+					 'none'			=> __( 'None', 'sv100' ),
+					 'underline'		=> __( 'Underline', 'sv100' ),
+					 'line-through'	=> __( 'Line Through', 'sv100' ),
+					 'overline'		=> __( 'Overline', 'sv100' ),
+				 ) )
+				 ->load_type( 'select' );
+		
+		// Links
+		$this->s['font_family_link'] =
+			$this->get_setting()
+				 ->set_ID( 'font_family_link' )
+				 ->set_title( __( 'Font Family', 'sv100' ) )
+				 ->set_description( __( 'Base font for links.', 'sv100' ) )
+				 ->load_type( 'select' )
+				 ->set_options( $fonts );
+		
+		$this->s['font_size_link'] =
+			$this->get_setting()
+				 ->set_ID( 'font_size_link' )
+				 ->set_title( __( 'Font Size', 'sv100' ) )
+				 ->set_description( __( 'Default Link Font Size in Pixel', 'sv100' ) )
+				 ->set_default_value( 16 )
+				 ->load_type( 'number' );
+		
+		$this->s['font_line_height_link'] =
+			$this->get_setting()
+				 ->set_ID( 'font_line_height_link' )
+				 ->set_title( __( 'Font Line Height', 'sv100' ) )
+				 ->set_description( __( 'Default Link Line Height in Pixel', 'sv100' ) )
+				 ->set_default_value( 23 )
+				 ->load_type( 'number' );
+		
+		$this->s['font_color_link'] =
+			$this->get_setting()
+				 ->set_ID( 'font_color_link' )
+				 ->set_title( __( 'Font Color', 'sv100' ) )
+				 ->set_description( __( 'Default Link Font Color', 'sv100' ) )
+				 ->set_default_value( '#000000' )
+				 ->load_type( 'color' );
+		
+		$this->s['font_background_color_active_link'] =
+			$this->get_setting()
+				 ->set_ID( 'font_background_color_active_link' )
+				 ->set_title( __( 'Activate Background Color', 'sv100' ) )
+				 ->set_description( __( 'Activates background color for links.', 'sv100' ) )
+				 ->set_default_value( 0 )
+				 ->load_type( 'checkbox' );
+		
+		$this->s['font_background_color_link'] =
+			$this->get_setting()
+				 ->set_ID( 'font_background_color_link' )
+				 ->set_title( __( 'Background Color', 'sv100' ) )
+				 ->set_description( __( 'Default Background Color for links', 'sv100' ) )
+				 ->set_default_value( '#FFFFFF' )
+				 ->load_type( 'color' );
+		
+		$this->s['text_decoration_link'] =
+			$this->get_setting()
+				 ->set_ID( 'text_decoration_link' )
+				 ->set_title( __( 'Text Decoration', 'sv100' ) )
+				 ->set_description( __( 'Default Link Text Decoration', 'sv100' ) )
+				 ->set_default_value( 'none' )
+				 ->set_options( array(
+				 	'none'			=> __( 'None', 'sv100' ),
+					'underline'		=> __( 'Underline', 'sv100' ),
+					'line-through'	=> __( 'Line Through', 'sv100' ),
+					'overline'		=> __( 'Overline', 'sv100' ),
+				 ) )
+				 ->load_type( 'select' );
+		
+		// Links - Hover/Focus
+		$this->s['font_family_link_hover'] =
+			$this->get_setting()
+				 ->set_ID( 'font_family_link_hover' )
+				 ->set_title( __( 'Font Family', 'sv100' ) )
+				 ->set_description( __( 'Base font for links on hover/focus.', 'sv100' ) )
+				 ->load_type( 'select' )
+				 ->set_options( $fonts );
+		
+		$this->s['font_size_link_hover'] =
+			$this->get_setting()
+				 ->set_ID( 'font_size_link_hover' )
+				 ->set_title( __( 'Font Size', 'sv100' ) )
+				 ->set_description( __( 'Default Link Font Size in Pixel on hover/focus', 'sv100' ) )
+				 ->set_default_value( 16 )
+				 ->load_type( 'number' );
+		
+		$this->s['font_line_height_link_hover'] =
+			$this->get_setting()
+				 ->set_ID( 'font_line_height_link_hover' )
+				 ->set_title( __( 'Font Line Height', 'sv100' ) )
+				 ->set_description( __( 'Default Link Line Height in Pixel on hover/focus', 'sv100' ) )
+				 ->set_default_value( 23 )
+				 ->load_type( 'number' );
+		
+		$this->s['font_color_link_hover'] =
+			$this->get_setting()
+				 ->set_ID( 'font_color_link_hover' )
+				 ->set_title( __( 'Font Color', 'sv100' ) )
+				 ->set_description( __( 'Default Link Font Color on hover/focus', 'sv100' ) )
+				 ->set_default_value( '#000000' )
+				 ->load_type( 'color' );
+		
+		$this->s['font_background_color_active_link_hover'] =
+			$this->get_setting()
+				 ->set_ID( 'font_background_color_active_link_hover' )
+				 ->set_title( __( 'Activate Background Color', 'sv100' ) )
+				 ->set_description( __( 'Activates background color for links on hover/focus.', 'sv100' ) )
+				 ->set_default_value( 0 )
+				 ->load_type( 'checkbox' );
+		
+		$this->s['font_background_color_link_hover'] =
+			$this->get_setting()
+				 ->set_ID( 'font_background_color_link_hover' )
+				 ->set_title( __( 'Background Color', 'sv100' ) )
+				 ->set_description( __( 'Default Background Color for links on hover/focus', 'sv100' ) )
+				 ->set_default_value( '#FFFFFF' )
+				 ->load_type( 'color' );
+		
+		$this->s['text_decoration_link_hover'] =
+			$this->get_setting()
+				 ->set_ID( 'text_decoration_link_hover' )
+				 ->set_title( __( 'Text Decoration', 'sv100' ) )
+				 ->set_description( __( 'Default Link Text Decoration', 'sv100' ) )
+				 ->set_default_value( 'none' )
+				 ->set_options( array(
+					 'none'			=> __( 'None', 'sv100' ),
+					 'underline'		=> __( 'Underline', 'sv100' ),
+					 'line-through'	=> __( 'Line Through', 'sv100' ),
+					 'overline'		=> __( 'Overline', 'sv100' ),
+				 ) )
+				 ->load_type( 'select' );
 		
 		return $this;
 	}
