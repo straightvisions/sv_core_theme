@@ -45,7 +45,7 @@ class init extends \sv_core\core {
 		static::$active_theme_url  = trailingslashit( get_stylesheet_directory_uri() );
 		static::$parent_theme_url  = trailingslashit( get_template_directory_uri() );
 		
-		$this->check_first_load()->init_modules();
+		$this->load_core_theme_modules()->check_first_load()->init_modules();
 		
 		$this->wordpress_version_check( '5.0.0' );
 	}
@@ -96,7 +96,26 @@ class init extends \sv_core\core {
 		$this->module_desc = $desc;
 	}
 	
-	public function init_modules() {
+	protected function load_core_theme_modules(): init {
+		require_once( 'settings_components/settings_components.php' );
+		
+		$this->settings_components = new settings_components();
+		$this->settings_components->set_root( $this->get_root( ));
+		$this->settings_components->set_parent( $this );
+		$this->settings_components->init();
+		
+		return $this;
+	}
+	
+	public function get_settings_component( $suffix, $component = false, $default_value = false ) {
+		if ( ! $component ) {
+			return $this->get_root()->settings_components->get_component( $suffix, $this );
+		}
+		
+		return $this->get_root()->settings_components->set_component( $suffix, $component, $default_value, $this );
+	}
+	
+	public function init_modules(): init {
 		$modules = glob( $this->get_parent_theme_path() . 'lib/modules/*' );
 		
 		if ( $this->get_active_theme_path() != $this->get_parent_theme_path() ) {
@@ -139,6 +158,8 @@ class init extends \sv_core\core {
 				}
 			}
 		}
+		
+		return $this;
 	}
 	
 	private function load_module_check( string $name, string $path, bool $required = false ): bool {
@@ -354,292 +375,6 @@ class init extends \sv_core\core {
 				$this->load_page();
 			}
 		);
-	}
-	protected function settings_draft_font(){
-		$fonts			= array( '' => __( 'choose...', 'sv100' ) );
-		$font_array 	= $this->get_module( 'sv_webfontloader') ? $this->get_module( 'sv_webfontloader')->get_setting( 'fonts' )->run_type()->get_data() : '';
-		
-		if ( $font_array ) {
-			foreach( $font_array as $font ) {
-				$fonts[ $font['entry_label'] ]		= $font['entry_label'];
-			}
-		}
-		
-		// General
-		$this->s['font_family'] =
-			$this->get_setting()
-				 ->set_ID( 'font_family' )
-				 ->set_title( __( 'Font Family', 'sv100' ) )
-				 ->set_description( __( 'Base font for all frontend elements.', 'sv100' ) )
-				 ->load_type( 'select' )
-				 ->set_options( $fonts );
-		
-		$this->s['font_size'] =
-			$this->get_setting()
-				 ->set_ID( 'font_size' )
-				 ->set_title( __( 'Font Size', 'sv100' ) )
-				 ->set_description( __( 'Default Font Size in Pixel', 'sv100' ) )
-				 ->set_default_value( 16 )
-				 ->load_type( 'number' );
-		
-		$this->s['font_color'] =
-			$this->get_setting()
-				 ->set_ID( 'font_color' )
-				 ->set_title( __( 'Font Color', 'sv100' ) )
-				 ->set_description( __( 'Default Font Color', 'sv100' ) )
-				 ->set_default_value( '#000000' )
-				 ->load_type( 'color' );
-		
-		$this->s['font_line_height'] =
-			$this->get_setting()
-				 ->set_ID( 'font_line_height' )
-				 ->set_title( __( 'Font Line Height', 'sv100' ) )
-				 ->set_description( __( 'Default Line Height in Pixel', 'sv100' ) )
-				 ->set_default_value( 23 )
-				 ->load_type( 'number' );
-		
-		$this->s['text_decoration'] =
-			$this->get_setting()
-				 ->set_ID( 'text_decoration' )
-				 ->set_title( __( 'Text Decoration', 'sv100' ) )
-				 ->set_description( __( 'Default Link Text Decoration', 'sv100' ) )
-				 ->set_default_value( 'none' )
-				 ->set_options( array(
-					 'none'			=> __( 'None', 'sv100' ),
-					 'underline'		=> __( 'Underline', 'sv100' ),
-					 'line-through'	=> __( 'Line Through', 'sv100' ),
-					 'overline'		=> __( 'Overline', 'sv100' ),
-				 ) )
-				 ->load_type( 'select' );
-		
-		// Links
-		$this->s['font_family_link'] =
-			$this->get_setting()
-				 ->set_ID( 'font_family_link' )
-				 ->set_title( __( 'Font Family', 'sv100' ) )
-				 ->set_description( __( 'Base font for links.', 'sv100' ) )
-				 ->load_type( 'select' )
-				 ->set_options( $fonts );
-		
-		$this->s['font_size_link'] =
-			$this->get_setting()
-				 ->set_ID( 'font_size_link' )
-				 ->set_title( __( 'Font Size', 'sv100' ) )
-				 ->set_description( __( 'Default Link Font Size in Pixel', 'sv100' ) )
-				 ->set_default_value( 16 )
-				 ->load_type( 'number' );
-		
-		$this->s['font_line_height_link'] =
-			$this->get_setting()
-				 ->set_ID( 'font_line_height_link' )
-				 ->set_title( __( 'Font Line Height', 'sv100' ) )
-				 ->set_description( __( 'Default Link Line Height in Pixel', 'sv100' ) )
-				 ->set_default_value( 23 )
-				 ->load_type( 'number' );
-		
-		$this->s['font_color_link'] =
-			$this->get_setting()
-				 ->set_ID( 'font_color_link' )
-				 ->set_title( __( 'Font Color', 'sv100' ) )
-				 ->set_description( __( 'Default Link Font Color', 'sv100' ) )
-				 ->set_default_value( '#000000' )
-				 ->load_type( 'color' );
-		
-		$this->s['font_background_color_active_link'] =
-			$this->get_setting()
-				 ->set_ID( 'font_background_color_active_link' )
-				 ->set_title( __( 'Activate Background Color', 'sv100' ) )
-				 ->set_description( __( 'Activates background color for links.', 'sv100' ) )
-				 ->set_default_value( 0 )
-				 ->load_type( 'checkbox' );
-		
-		$this->s['font_background_color_link'] =
-			$this->get_setting()
-				 ->set_ID( 'font_background_color_link' )
-				 ->set_title( __( 'Background Color', 'sv100' ) )
-				 ->set_description( __( 'Default Background Color for links', 'sv100' ) )
-				 ->set_default_value( '#FFFFFF' )
-				 ->load_type( 'color' );
-		
-		$this->s['text_decoration_link'] =
-			$this->get_setting()
-				 ->set_ID( 'text_decoration_link' )
-				 ->set_title( __( 'Text Decoration', 'sv100' ) )
-				 ->set_description( __( 'Default Link Text Decoration', 'sv100' ) )
-				 ->set_default_value( 'none' )
-				 ->set_options( array(
-				 	'none'			=> __( 'None', 'sv100' ),
-					'underline'		=> __( 'Underline', 'sv100' ),
-					'line-through'	=> __( 'Line Through', 'sv100' ),
-					'overline'		=> __( 'Overline', 'sv100' ),
-				 ) )
-				 ->load_type( 'select' );
-		
-		// Links - Hover/Focus
-		$this->s['font_family_link_hover'] =
-			$this->get_setting()
-				 ->set_ID( 'font_family_link_hover' )
-				 ->set_title( __( 'Font Family', 'sv100' ) )
-				 ->set_description( __( 'Base font for links on hover/focus.', 'sv100' ) )
-				 ->load_type( 'select' )
-				 ->set_options( $fonts );
-		
-		$this->s['font_size_link_hover'] =
-			$this->get_setting()
-				 ->set_ID( 'font_size_link_hover' )
-				 ->set_title( __( 'Font Size', 'sv100' ) )
-				 ->set_description( __( 'Default Link Font Size in Pixel on hover/focus', 'sv100' ) )
-				 ->set_default_value( 16 )
-				 ->load_type( 'number' );
-		
-		$this->s['font_line_height_link_hover'] =
-			$this->get_setting()
-				 ->set_ID( 'font_line_height_link_hover' )
-				 ->set_title( __( 'Font Line Height', 'sv100' ) )
-				 ->set_description( __( 'Default Link Line Height in Pixel on hover/focus', 'sv100' ) )
-				 ->set_default_value( 23 )
-				 ->load_type( 'number' );
-		
-		$this->s['font_color_link_hover'] =
-			$this->get_setting()
-				 ->set_ID( 'font_color_link_hover' )
-				 ->set_title( __( 'Font Color', 'sv100' ) )
-				 ->set_description( __( 'Default Link Font Color on hover/focus', 'sv100' ) )
-				 ->set_default_value( '#000000' )
-				 ->load_type( 'color' );
-		
-		$this->s['font_background_color_active_link_hover'] =
-			$this->get_setting()
-				 ->set_ID( 'font_background_color_active_link_hover' )
-				 ->set_title( __( 'Activate Background Color', 'sv100' ) )
-				 ->set_description( __( 'Activates background color for links on hover/focus.', 'sv100' ) )
-				 ->set_default_value( 0 )
-				 ->load_type( 'checkbox' );
-		
-		$this->s['font_background_color_link_hover'] =
-			$this->get_setting()
-				 ->set_ID( 'font_background_color_link_hover' )
-				 ->set_title( __( 'Background Color', 'sv100' ) )
-				 ->set_description( __( 'Default Background Color for links on hover/focus', 'sv100' ) )
-				 ->set_default_value( '#FFFFFF' )
-				 ->load_type( 'color' );
-		
-		$this->s['text_decoration_link_hover'] =
-			$this->get_setting()
-				 ->set_ID( 'text_decoration_link_hover' )
-				 ->set_title( __( 'Text Decoration', 'sv100' ) )
-				 ->set_description( __( 'Default Link Text Decoration', 'sv100' ) )
-				 ->set_default_value( 'none' )
-				 ->set_options( array(
-					 'none'			=> __( 'None', 'sv100' ),
-					 'underline'		=> __( 'Underline', 'sv100' ),
-					 'line-through'	=> __( 'Line Through', 'sv100' ),
-					 'overline'		=> __( 'Overline', 'sv100' ),
-				 ) )
-				 ->load_type( 'select' );
-		
-		return $this;
-	}
-	protected function settings_draft_background(){
-		$this->s['background_color'] =
-			$this->get_setting()
-				 ->set_ID( 'background_color' )
-				 ->set_title( __( 'Background Color', 'sv100' ) )
-				 ->set_description( __( 'Background Color for Body', 'sv100' ) )
-				 ->set_default_value( '#FFFFFF' )
-				 ->load_type( 'color' );
-		
-		$this->s['background_image'] =
-			$this->get_setting()
-				 ->set_ID( 'background_image' )
-				 ->set_title( __('Background Image', 'sv100' ) )
-				 ->set_description( __( 'Background Image for Body', 'sv100' ) )
-				 ->load_type( 'upload' );
-		
-		$this->s['background_image_media_size'] =
-			$this->get_setting()
-				 ->set_ID( 'background_image_media_size' )
-				 ->set_title( __( 'Background Image Media Size', 'sv100' ) )
-				 ->set_description( __( 'Background Image Media Size for Body', 'sv100' ) )
-				 ->set_default_value( 'large' )
-				 ->load_type( 'select' )
-				 ->set_options( array_combine( get_intermediate_image_sizes(), get_intermediate_image_sizes() ) );
-		
-		$this->s['background_image_position'] =
-			$this->get_setting()
-				 ->set_ID( 'background_image_position' )
-				 ->set_title( __( 'Background Position', 'sv100' ) )
-				 ->set_description( __( 'Background Image Position Value', 'sv100' ) )
-				 ->set_placeholder( 'center top' )
-				 ->set_default_value( 'center top' )
-				 ->load_type( 'text' );
-		
-		$this->s['background_image_size'] =
-			$this->get_setting()
-				 ->set_ID( 'background_image_size' )
-				 ->set_title( __( 'Background Size', 'sv100' ) )
-				 ->set_placeholder( '0 ' )
-				 ->set_description(
-				 	'<p>' . __( 'Background Image Size in Pixel', 'sv100' ) . '<br>
-					' . __( 'If disabled Background Image Fit will take effect.', 'sv100' ) . '</p>
-					<p><strong>' . __( '0 = Disabled', 'sv100' ) . '</strong></p>'
-				 )
-				 ->set_min( 0 )
-				 ->set_default_value( 0 )
-				 ->load_type( 'number' );
-		
-		$this->s['background_image_fit'] =
-			$this->get_setting()
-				 ->set_ID( 'background_image_fit' )
-				 ->set_title( __( 'Background Fit', 'sv100' ) )
-				 ->set_description( __( 'Background Image Fit', 'sv100' ) )
-				 ->set_default_value( 'cover' )
-				 ->set_options( array(
-				 	'contain' 		=> __( 'Contain', 'sv100' ),
-					'cover'			=> __( 'Cover', 'sv100' ),
-				 ) )
-				 ->load_type( 'select' );
-		
-		$this->s['background_image_repeat'] =
-			$this->get_setting()
-				 ->set_ID( 'background_image_repeat' )
-				 ->set_title( __( 'Background Repeat', 'sv100' ) )
-				 ->set_description( __( 'Background Image Repeat', 'sv100' ) )
-				 ->set_default_value( 'no-repeat' )
-				 ->load_type( 'select' )
-				 ->set_options(
-					 array(
-						 '' 			=> __( 'choose...', 'sv100' ),
-						 'repeat' 	=> 'repeat',
-						 'repeat-x' 	=> 'repeat-x',
-						 'repeat-y' 	=> 'repeat-y',
-						 'no-repeat' => 'no-repeat',
-						 'space' 	=> 'space',
-						 'round' 	=> 'round',
-						 'initial' 	=> 'initial',
-						 'inherit' 	=> 'inherit'
-					 )
-				 );
-		
-		$this->s['background_image_attachment'] =
-			$this->get_setting()
-				 ->set_ID( 'background_image_attachment' )
-				 ->set_title( __( 'Background Attachment', 'sv100' ) )
-				 ->set_description( __( 'Background Image Attachment', 'sv100' ) )
-				 ->set_default_value( 'fixed' )
-				 ->load_type( 'select' )
-				 ->set_options(
-					 array(
-						 '' 			=> __('choose...', 'sv100'),
-						 'scroll' 	=> 'scroll',
-						 'fixed' 	=> 'fixed',
-						 'local' 	=> 'local',
-						 'initial' 	=> 'initial',
-						 'inherit' 	=> 'inherit'
-					 )
-				 );
-		
-		return $this;
 	}
 }
 
