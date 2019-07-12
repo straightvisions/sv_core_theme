@@ -2,11 +2,6 @@
 	namespace sv100;
 	
 	class font_family extends settings_components {
-		// Config
-		private $title 			= 'Font Family';
-		private $description 	= 'Choose a font for your text';
-		private $type			= 'select';
-		
 		// Creates the component and adds it to the components array
 		public function init() {
 			$setting 				= new component();
@@ -14,9 +9,9 @@
 			$setting->set_parent( $this );
 			
 			$setting->name 			= str_replace( 'sv100\\', '', get_class() );
-			$setting->title			= __( $this->title, 'sv100' );
-			$setting->description	= __( $this->description, 'sv100' );
-			$setting->type			= $this->type;
+			$setting->title			= __( 'Font Family', 'sv100' );
+			$setting->description	= __( 'Choose a font for your text', 'sv100' );
+			$setting->type			= 'select';
 			$setting->options		= $this->get_fonts();
 			
 			$setting->init();
