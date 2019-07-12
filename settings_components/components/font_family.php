@@ -25,8 +25,8 @@
 		// Returns all font's in SV WebfontLoader
 		private function get_fonts(): array {
 			$fonts			= array( '' => __( 'choose...', 'sv100' ) );
-			$font_array 	= $this->get_module( 'sv_webfontloader') ? $this->get_module( 'sv_webfontloader')->get_setting( 'fonts' )->run_type()->get_data() : '';
-			
+			$font_array 	= $this->get_module( 'sv_webfontloader', true ) ? $this->get_module( 'sv_webfontloader', true )->get_setting( 'fonts' )->run_type()->get_data() : '';
+
 			if ( $font_array ) {
 				foreach( $font_array as $font ) {
 					$fonts[ $font['entry_label'] ]		= $font['entry_label'];
