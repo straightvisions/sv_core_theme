@@ -2,11 +2,6 @@
 	namespace sv100;
 	
 	class background_attachment extends settings_components {
-		// Config
-		private $title 			= 'Background Attachment';
-		private $type			= 'select';
-		private $default_value	= 'fixed';
-		
 		// Creates the component and adds it to the components array
 		public function init() {
 			$setting 				= new component();
@@ -14,9 +9,9 @@
 			$setting->set_parent( $this );
 			
 			$setting->name 			= str_replace( 'sv100\\', '', get_class() );
-			$setting->title			= __( $this->title, 'sv100' );
-			$setting->type			= $this->type;
-			$setting->default_value	= $this->default_value;
+			$setting->title			= __( 'Background Attachment', 'sv100' );
+			$setting->type			= 'select';
+			$setting->default_value	= 'fixed';
 			$setting->options		= array(
 				'fixed' 	=> __( 'Fixed', 'sv100' ),
 				'scroll' 	=> __( 'Scroll', 'sv100' ),

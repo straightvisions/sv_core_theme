@@ -2,11 +2,6 @@
 	namespace sv100;
 	
 	class text_decoration extends settings_components {
-		// Config
-		private $title 			= 'Text Decoration';
-		private $type			= 'select';
-		private $default_value	= 'none';
-		
 		// Creates the component and adds it to the components array
 		public function init() {
 			$setting 				= new component();
@@ -14,9 +9,9 @@
 			$setting->set_parent( $this );
 			
 			$setting->name 			= str_replace( 'sv100\\', '', get_class() );
-			$setting->title			= __( $this->title, 'sv100' );
-			$setting->default_value	= $this->default_value;
-			$setting->type			= $this->type;
+			$setting->title			= __( 'Text Decoration', 'sv100' );
+			$setting->default_value	= 'none';
+			$setting->type			= 'select';
 			$setting->options		= array(
 				'none'			=> __( 'None', 'sv100' ),
 				'underline'		=> __( 'Underline', 'sv100' ),
