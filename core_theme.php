@@ -13,8 +13,8 @@ namespace sv100;
 require_once( 'core/core.php' );
 
 class init extends \sv_core\core {
-	const version 						= 4103;
-	const version_core_match 			= 4009;
+	const version 						= 4104;
+	const version_core_match 			= 4010;
 	
 	public static $is_child_theme 		= false;
 	private $modules_registered 		= array();
@@ -26,6 +26,7 @@ class init extends \sv_core\core {
 	protected $module_title 			= false;
 	protected $module_desc 				= false;
 	private $first_load					= false;
+	protected static $settings_components	= false;
 	
 	protected static $scripts_loaded 	= false;
 	protected static $theme_core_initialized			= false;
@@ -97,22 +98,25 @@ class init extends \sv_core\core {
 	}
 	
 	protected function load_core_theme_modules(): init {
-		require_once( 'settings_components/settings_components.php' );
+		require_once( $this->get_path('core_theme/settings_components/settings_components.php' ));
 		
-		$this->settings_components = new settings_components();
-		$this->settings_components->set_root( $this->get_root( ));
-		$this->settings_components->set_parent( $this );
-		$this->settings_components->init();
+		static::$settings_components = new settings_components();
+		$this->get_settings_components()->set_root( $this->get_root( ));
+		$this->get_settings_components()->set_parent( $this );
+		$this->get_settings_components()->init();
 		
 		return $this;
+	}
+	public function get_settings_components(){
+		return static::$settings_components;
 	}
 	
 	public function get_settings_component( $suffix, $component = false, $default_value = false ) {
 		if ( ! $component ) {
-			return $this->get_root()->settings_components->get_component( $suffix, $this );
+			return $this->get_settings_components()->get_component( $suffix, $this );
 		}
 		
-		return $this->get_root()->settings_components->set_component( $suffix, $component, $default_value, $this );
+		return $this->get_settings_components()->set_component( $suffix, $component, $default_value, $this );
 	}
 	
 	public function init_modules(): init {
