@@ -13,7 +13,7 @@ namespace sv100;
 require_once( 'core/core.php' );
 
 class init extends \sv_core\core {
-	const version 						= 4105;
+	const version 						= 4106;
 	const version_core_match 			= 4010;
 	
 	public static $is_child_theme 		= false;
@@ -91,10 +91,14 @@ class init extends \sv_core\core {
 	
 	public function set_module_title( string $title ) {
 		$this->module_title = $title;
+		
+		return $this;
 	}
 	
 	public function set_module_desc( string $desc ) {
 		$this->module_desc = $desc;
+		
+		return $this;
 	}
 	
 	protected function load_core_theme_modules(): init {
