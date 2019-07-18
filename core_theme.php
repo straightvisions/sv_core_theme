@@ -30,6 +30,7 @@ class init extends \sv_core\core {
 	
 	protected static $scripts_loaded 	= false;
 	protected static $theme_core_initialized			= false;
+	protected $has_sidebar				= false;
 	
 	public function load() {
 		if(!$this->setup( __NAMESPACE__, __FILE__ . '../' )){
@@ -383,6 +384,9 @@ class init extends \sv_core\core {
 				$this->load_page();
 			}
 		);
+	}
+	public function has_sidebar(): bool{
+		return $this->has_sidebar;
 	}
 }
 
