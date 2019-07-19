@@ -13,8 +13,8 @@
 			$setting->type			= 'select';
 			$setting->default_value	= 'static';
 			$setting->options		= array(
-				'static'	=> __( 'Static', 'sv100' ),
-				'fixed'		=> __( 'Fixed', 'sv100' )
+				'static'	=> __( 'static', 'sv100' ),
+				'fixed'		=> __( 'fixed', 'sv100' )
 			);
 			
 			$setting->init();
