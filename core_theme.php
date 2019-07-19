@@ -13,7 +13,7 @@ namespace sv100;
 require_once( 'core/core.php' );
 
 class init extends \sv_core\core {
-	const version 						= 4109;
+	const version 						= 4110;
 	const version_core_match 			= 4013;
 	
 	public static $is_child_theme 		= false;
@@ -50,6 +50,35 @@ class init extends \sv_core\core {
 		$this->load_core_theme_modules()->check_first_load()->init_modules();
 		
 		$this->wordpress_version_check( '5.0.0' );
+
+		$this->freemius();
+		do_action( 'sv100_freemius_loaded' );
+	}
+	protected function freemius(){
+		global $sv100_freemius;
+
+		if ( ! isset( $sv100_freemius ) ) {
+			$sv100_freemius = fs_dynamic_init( array(
+				'id'                  => '4141',
+				'slug'                => 'sv100',
+				'type'                => 'theme',
+				'public_key'          => 'pk_8b2d100933f4a81fe4f81c7f30274',
+				'is_premium'          => false,
+				'has_addons'          => false,
+				'has_paid_plans'      => false,
+				'menu'                => array(
+					'slug'           => 'sv100',
+					'account'        => false,
+					'contact'        => false,
+					'support'        => false,
+					'parent'         => array(
+						'slug' => 'themes.php',
+					),
+				),
+			) );
+		}
+
+		return $sv100_freemius;
 	}
 	public function wordpress_version_notice() {
 		echo '<div class="error"><p>';
