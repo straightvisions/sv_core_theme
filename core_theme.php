@@ -32,7 +32,7 @@ class init extends \sv_core\core {
 	protected static $theme_core_initialized			= false;
 	protected $has_sidebar				= false;
 	
-	public function load() {
+	public function init() {
 		if(!$this->setup( __NAMESPACE__, __FILE__ . '../' )){
 			return false;
 		}
@@ -420,4 +420,4 @@ class init extends \sv_core\core {
 }
 
 $GLOBALS['sv100'] = new init();
-$GLOBALS['sv100']->load();
+$GLOBALS['sv100']->init();
