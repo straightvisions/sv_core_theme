@@ -14,7 +14,8 @@
 			$setting->default_value	= 'static';
 			$setting->options		= array(
 				'static'	=> __( 'static', 'sv100' ),
-				'fixed'		=> __( 'fixed', 'sv100' )
+				'fixed'		=> __( 'fixed', 'sv100' ),
+				'sticky'	=> __( 'sticky', 'sv100' )
 			);
 			
 			$setting->init();
