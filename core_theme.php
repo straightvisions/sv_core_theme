@@ -13,7 +13,7 @@ namespace sv100;
 require_once( 'core/core.php' );
 
 class init extends \sv_core\core {
-	const version 						= 1413; // should match version in style.css and readme.txt
+	const version 						= 1414; // should match version in style.css and readme.txt
 	const version_core_match 			= 4016;
 	
 	public static $is_child_theme 		= false;
@@ -320,7 +320,7 @@ class init extends \sv_core\core {
 		return false;
 	}
 	
-	protected function get_modules_settings(): array {
+	public function get_modules_settings(): array {
 		$settings = array();
 		
 		foreach ( $this->get_modules_loaded() as $prefix => $module ) {
@@ -340,7 +340,7 @@ class init extends \sv_core\core {
 		return $settings;
 	}
 	
-	protected function get_scripts_settings(): array {
+	public function get_scripts_settings(): array {
 		$settings = array();
 		
 		foreach ( static::$scripts->get_scripts() as $script ) {
