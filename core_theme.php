@@ -370,20 +370,9 @@ class init extends \sv_core\core {
 	protected function init_subcore(){
 		if ( !static::$theme_core_initialized ) {
 			static::$theme_core_initialized = true;
-			
-			add_action( 'admin_menu', array( $this , 'add_theme_page' ), 100 );
+
+			do_action('sv100_init');
 		}
-	}
-	public function add_theme_page(){
-		\add_theme_page(
-			$this->get_section_title(),		// page title
-			$this->get_section_title(),		// menu title
-			'manage_options',		// capability
-			$this->get_prefix(),			// menu slug
-			function(){	// callable function
-				$this->load_page();
-			}
-		);
 	}
 	public function has_sidebar(): bool{
 		return $this->has_sidebar;
