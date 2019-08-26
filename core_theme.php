@@ -13,24 +13,24 @@ namespace sv100;
 require_once( 'core/core.php' );
 
 class init extends \sv_core\core {
-	const version 						= 1414; // should match version in style.css and readme.txt
-	const version_core_match 			= 4017;
+	const version 								= 1414; // should match version in style.css and readme.txt
+	const version_core_match 					= 4017;
 	
-	public static $is_child_theme 		= false;
-	private $modules_registered 		= array();
-	protected static $active_theme_path = '';
-	protected static $parent_theme_path = '';
-	protected static $active_theme_url 	= '';
-	protected static $parent_theme_url 	= '';
-	protected static $modules_loaded 	= array();
-	protected $module_title 			= false;
-	protected $module_desc 				= false;
-	private $first_load					= false;
-	protected static $settings_components	= false;
+	public static $is_child_theme 				= false;
+	private $modules_registered 				= array();
+	protected static $active_theme_path 		= '';
+	protected static $parent_theme_path 		= '';
+	protected static $active_theme_url 			= '';
+	protected static $parent_theme_url 			= '';
+	protected static $modules_loaded 			= array();
+	protected $module_title 					= false;
+	protected $module_desc 						= false;
+	private $first_load							= false;
+	protected static $settings_components		= false;
 	
-	protected static $scripts_loaded 	= false;
-	protected static $theme_core_initialized			= false;
-	protected $has_sidebar				= false;
+	protected static $scripts_loaded 			= false;
+	protected static $theme_core_initialized	= false;
+	protected $has_sidebar						= false;
 	
 	public function init() {
 		if(!$this->setup( __NAMESPACE__, __FILE__ . '../' )){
@@ -39,8 +39,8 @@ class init extends \sv_core\core {
 		
 		load_theme_textdomain( 'sv100', get_template_directory() . '/languages' );
 		
-		$this->set_section_title( 'SV100' );
-		$this->set_section_desc( 'SV100 Theme' );
+		$this->set_section_title( __( 'SV100', 'sv100' ) );
+		$this->set_section_desc( __( 'SV100 Theme', 'sv100' ) );
 		
 		static::$active_theme_path = trailingslashit( get_stylesheet_directory() );
 		static::$parent_theme_path = trailingslashit( get_template_directory() );
@@ -51,10 +51,15 @@ class init extends \sv_core\core {
 		
 		$this->wordpress_version_check( '5.0.0' );
 	}
+	
 	public function wordpress_version_notice() {
 		echo '<div class="error"><p>';
 		/* translators: %s: Minimum required version */
-		printf( __( '%1$s requires WordPress %2$s or later to function properly. Please upgrade WordPress before activating %3$s.', 'sv100' ), $this->get_section_title(),'5.0.0', $this->get_section_title() );
+		printf(
+			__( '%1$s requires WordPress %2$s or later to function properly.
+			Please upgrade WordPress before activating %3$s.', 'sv100' ),
+			$this->get_section_title(),'5.0.0', $this->get_section_title()
+		);
 		echo '</p></div>';
 	}
 	
@@ -87,7 +92,7 @@ class init extends \sv_core\core {
 	}
 	
 	public function get_module_desc(): string {
-		return $this->module_desc ? $this->module_desc : 'No Description defined.';
+		return $this->module_desc ? $this->module_desc : __( 'No Description defined.', 'sv100' );
 	}
 	
 	public function set_module_title( string $title ) {
@@ -136,7 +141,11 @@ class init extends \sv_core\core {
 			$this->set_modules_registered( $module );
 		}
 		
-		$this->load_module( 'sv_modules', $this->get_parent_theme_path() . 'lib/modules/sv_modules/', trailingslashit( $this->get_parent_theme_url() . 'lib/modules/sv_modules' ) );
+		$this->load_module(
+			'sv_modules',
+			$this->get_parent_theme_path() . 'lib/modules/sv_modules/',
+			trailingslashit( $this->get_parent_theme_url() . 'lib/modules/sv_modules' )
+		);
 
 		$this->sv_modules
 			->load_settings()
@@ -162,7 +171,7 @@ class init extends \sv_core\core {
 				} else {
 					$this->sv_modules->get_settings()[ $name ]
 						->set_title( $name )
-						->set_description( 'Description is available once activated.' )
+						->set_description( __( 'Description is available once activated.', 'sv100' ) )
 						->load_type( 'checkbox' );
 				}
 			}
@@ -311,7 +320,13 @@ class init extends \sv_core\core {
 			return $this->get_modules_loaded()[$this->get_root()->get_prefix($name)];
 		}
 
-		$loaded = $this->get_root()->load_module($name, trailingslashit($this->get_root()->get_parent_theme_path() . 'lib/modules/'.$name), trailingslashit( $this->get_root()->get_parent_theme_url() . 'lib/modules/'.$name ), $required );
+		$loaded = $this->get_root()
+					   ->load_module(
+					   		$name,
+							trailingslashit( $this->get_root()->get_parent_theme_path() . 'lib/modules/'.$name ),
+							trailingslashit( $this->get_root()->get_parent_theme_url() . 'lib/modules/'.$name ),
+							$required
+					   );
 		
 		if($loaded){
 			return $this->get_root()->get_modules_loaded()[$this->get_root()->get_prefix($name) ];
