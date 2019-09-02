@@ -13,7 +13,7 @@ namespace sv100;
 require_once( 'core/core.php' );
 
 class init extends \sv_core\core {
-	const version 								= 1416; // should match version in style.css and readme.txt
+	const version 								= 1417; // should match version in style.css and readme.txt
 	const version_core_match 					= 4017;
 	
 	public static $is_child_theme 				= false;
@@ -258,7 +258,7 @@ class init extends \sv_core\core {
 		return static::$is_child_theme;
 	}
 	
-	public function get_path( $path = '' ): string {
+	public function get_path( string $path = '' ): string {
 		if($this->get_module_name() != 'init'){
 			$module			= 'modules/'.$this->get_module_name() . '/';
 		}else {
@@ -277,7 +277,7 @@ class init extends \sv_core\core {
 		return $root_theme_file_path;
 	}
 	
-	public function get_url( $path = '' ): string {
+	public function get_url( string $path = '' ): string {
 		if ( $this->is_child_theme() ) {
 			$active_theme_file_path = $this->get_active_theme_path() . 'lib/modules/' . $this->get_module_name() . '/' . $path;
 			$active_theme_file_url  = $this->get_active_theme_url() . 'lib/modules/' . $this->get_module_name() . '/' . $path;
