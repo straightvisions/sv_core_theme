@@ -257,8 +257,8 @@ class init extends \sv_core\core {
 	private function is_child_theme(): bool {
 		return static::$is_child_theme;
 	}
-	
-	public function get_path( string $path = '' ): string {
+
+	public function get_path( string $suffix = ''): string {
 		if($this->get_module_name() != 'init'){
 			$module			= 'modules/'.$this->get_module_name() . '/';
 		}else {
@@ -266,29 +266,29 @@ class init extends \sv_core\core {
 		}
 		
 		if ( $this->is_child_theme() ) {
-			$active_theme_file_path = $this->get_active_theme_path() . 'lib/'. $module.$path;
+			$active_theme_file_path = $this->get_active_theme_path() . 'lib/'. $module.$suffix;
 			if ( file_exists( $active_theme_file_path ) ) {
 				return $active_theme_file_path;
 			}
 		}
 		
-		$root_theme_file_path = $this->get_parent_theme_path() . 'lib/' . $module . $path;
+		$root_theme_file_path = $this->get_parent_theme_path() . 'lib/' . $module . $suffix;
 		
 		return $root_theme_file_path;
 	}
-	
-	public function get_url( string $path = '' ): string {
+
+	public function get_url( string $suffix = ''): string {
 		if ( $this->is_child_theme() ) {
-			$active_theme_file_path = $this->get_active_theme_path() . 'lib/modules/' . $this->get_module_name() . '/' . $path;
-			$active_theme_file_url  = $this->get_active_theme_url() . 'lib/modules/' . $this->get_module_name() . '/' . $path;
+			$active_theme_file_path = $this->get_active_theme_path() . 'lib/modules/' . $this->get_module_name() . '/' . $suffix;
+			$active_theme_file_url  = $this->get_active_theme_url() . 'lib/modules/' . $this->get_module_name() . '/' . $suffix;
 			
 			if ( file_exists( $active_theme_file_path ) ) {
 				return $active_theme_file_url;
 			}
 		}
 		
-		$root_theme_file_path = $this->get_parent_theme_path() . 'lib/modules/' . $this->get_module_name() . '/' . $path;
-		$root_theme_file_url  = $this->get_parent_theme_url() . 'lib/modules/' . $this->get_module_name() . '/' . $path;
+		$root_theme_file_path = $this->get_parent_theme_path() . 'lib/modules/' . $this->get_module_name() . '/' . $suffix;
+		$root_theme_file_url  = $this->get_parent_theme_url() . 'lib/modules/' . $this->get_module_name() . '/' . $suffix;
 		
 		if ( file_exists( $root_theme_file_path ) ) {
 			return $root_theme_file_url;
