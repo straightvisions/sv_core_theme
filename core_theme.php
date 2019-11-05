@@ -259,10 +259,13 @@ class init extends \sv_core\core {
 		return static::$is_child_theme;
 	}
 
-	protected function set_is_child_module(){
+	protected function set_is_child_module() {
 		$this->is_child_module			= true;
+
+		return $this;
 	}
-	protected function get_is_child_module(){
+
+	protected function get_is_child_module() {
 		return $this->is_child_module;
 	}
 
