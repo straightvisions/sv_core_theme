@@ -10,9 +10,8 @@
 			
 			$setting->name 			= str_replace( 'sv100\\', '', get_class() );
 			$setting->title			= __( 'Line Height', 'sv100' );
-			$setting->description	= __( 'Line Height in Pixel', 'sv100' );
-			$setting->default_value	= 23;
-			$setting->type			= 'number';
+			$setting->description	= __( 'Set line height as multiplier or with a unit.', 'sv100' );
+			$setting->type			= 'text';
 			
 			$setting->init();
 		}

@@ -20,9 +20,17 @@
 		// Returns all font's in SV WebfontLoader
 		private function get_fonts(): array {
 			$fonts			= array( '' => __( 'choose...', 'sv100' ) );
-			$font_array 	= $this->get_module( 'sv_webfontloader', true ) ? $this->get_module( 'sv_webfontloader', true )->get_setting( 'fonts' )->run_type()->get_data() : '';
 
-			if ( $font_array ) {
+			if($this->get_module( 'sv_webfontloader', true ) && $this->get_module( 'sv_webfontloader', true )->get_setting( 'fonts' )->run_type()->get_data()){
+				$font_array = $this->get_module( 'sv_webfontloader', true )->get_setting( 'fonts' )->run_type()->get_data();
+			}else{
+				$font_array = array();
+			}
+
+			// sv100_settings_components_font_family
+			$font_array 	= apply_filters($this->get_prefix(), $font_array);
+
+			if ( count($font_array) > 0) {
 				foreach( $font_array as $font ) {
 					$fonts[ $font['entry_label'] ]		= $font['entry_label'];
 				}

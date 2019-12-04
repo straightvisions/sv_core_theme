@@ -1,7 +1,7 @@
 <?php
 	namespace sv100;
 	
-	class position extends settings_components {
+	class highlight_color extends settings_components {
 		// Creates the component and adds it to the components array
 		public function init() {
 			$setting 				= new component();
@@ -9,14 +9,10 @@
 			$setting->set_parent( $this );
 			
 			$setting->name 			= str_replace( 'sv100\\', '', get_class() );
-			$setting->title			= __( 'Position', 'sv100' );
-			$setting->type			= 'select';
-			$setting->default_value	= 'static';
-			$setting->options		= array(
-				'static'	=> __( 'static', 'sv100' ),
-				'fixed'		=> __( 'fixed', 'sv100' ),
-				'sticky'	=> __( 'sticky', 'sv100' )
-			);
+			$setting->title			= __( 'Highlight Color', 'sv100' );
+			$setting->description	= __( 'This color is used for highlighting elements, like links on hover/focus.', 'sv100' );
+			$setting->default_value	= '#358ae9';
+			$setting->type			= 'color';
 			
 			$setting->init();
 		}

@@ -13,11 +13,11 @@
 			$setting->type			= 'select';
 			$setting->default_value	= 'fixed';
 			$setting->options		= array(
-				'fixed' 	=> __( 'Fixed', 'sv100' ),
-				'scroll' 	=> __( 'Scroll', 'sv100' ),
-				'local' 	=> __( 'Local', 'sv100' ),
-				'initial' 	=> __( 'Initial', 'sv100' ),
-				'inherit' 	=> __( 'Inherit', 'sv100' )
+				'fixed' 	=> __( 'fixed', 'sv100' ),
+				'scroll' 	=> __( 'scroll', 'sv100' ),
+				'local' 	=> __( 'local', 'sv100' ),
+				'initial' 	=> __( 'initial', 'sv100' ),
+				'inherit' 	=> __( 'inherit', 'sv100' )
 			);
 			
 			$setting->init();
