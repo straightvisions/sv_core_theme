@@ -415,6 +415,22 @@ class init extends \sv_core\core {
 	public function has_sidebar(): bool{
 		return $this->has_sidebar;
 	}
+
+	public function get_responsive_subpage( string $title, string $template_path, $breakpoints = array() ): string {
+		$breakpoints = $this->get_breakpoints();
+		$new_breakpoints = array( array_shift( $breakpoints ) );
+
+		// Loops through the sv_common breakpoint setting to see if they have a value
+		foreach ( $breakpoints as $suffix ) {
+			$value = $this->get_module( 'sv_common' )->get_setting( 'breakpoint_' . $suffix )->get_data();
+
+			if ( isset( $value ) && ! empty( $value ) ) {
+				$new_breakpoints[] = $suffix;
+			}
+		}
+
+		return parent::get_responsive_subpage( $title, $template_path, $new_breakpoints );
+	}
 }
 
 $sv100 = new init();
