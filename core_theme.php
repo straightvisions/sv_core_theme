@@ -14,7 +14,7 @@ require_once( 'core/core.php' );
 
 class init extends \sv_core\core {
 	const version 								= 1430; // should match version in style.css and readme.txt
-	const version_core_match 					= 4024;
+	const version_core_match 					= 4025;
 	
 	public static $is_child_theme 				= false;
 	private $modules_registered 				= array();
