@@ -48,7 +48,7 @@ class init extends \sv_core\core {
 		static::$active_theme_url  = trailingslashit( get_stylesheet_directory_uri() );
 		static::$parent_theme_url  = trailingslashit( get_template_directory_uri() );
 		
-		$this->load_core_theme_modules()->check_first_load()->init_modules();
+		$this->check_first_load()->init_modules();
 		
 		$this->wordpress_version_check( '5.0.0' );
 	}
@@ -106,28 +106,6 @@ class init extends \sv_core\core {
 		$this->module_desc = $desc;
 		
 		return $this;
-	}
-	
-	protected function load_core_theme_modules(): init {
-		require_once( $this->get_path('core_theme/settings_components/settings_components.php' ));
-		
-		static::$settings_components = new settings_components();
-		$this->get_settings_components()->set_root( $this->get_root( ));
-		$this->get_settings_components()->set_parent( $this );
-		$this->get_settings_components()->init();
-		
-		return $this;
-	}
-	public function get_settings_components(){
-		return static::$settings_components;
-	}
-	
-	public function get_settings_component( $suffix, $component = false, $default_value = false ) {
-		if ( ! $component ) {
-			return $this->get_settings_components()->get_component( $suffix, $this );
-		}
-		
-		return $this->get_settings_components()->set_component( $suffix, $component, $default_value, $this );
 	}
 	
 	public function init_modules(): init {
