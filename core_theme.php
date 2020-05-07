@@ -123,7 +123,8 @@ class init extends \sv_core\core {
 		$this->load_module(
 			'sv_modules',
 			$this->get_parent_theme_path() . 'lib/modules/sv_modules/',
-			trailingslashit( $this->get_parent_theme_url() . 'lib/modules/sv_modules' )
+			trailingslashit( $this->get_parent_theme_url() . 'lib/modules/sv_modules' ),
+			true
 		);
 
 		$this->sv_modules
@@ -133,7 +134,6 @@ class init extends \sv_core\core {
 			->set_description( $this->get_root()->sv_modules->get_module_desc() )
 			->load_type( 'checkbox' )
 			->set_disabled( true )
-			->run_type()
 			->set_data( 1 );
 		
 		foreach ( $modules as $module ) {
@@ -143,12 +143,12 @@ class init extends \sv_core\core {
 			
 			if ($name != 'sv_modules') {
 				if ( $this->load_module( $name, $path, $url ) ) {
-					$this->sv_modules->get_settings()[ $name ]
+					$this->sv_modules->get_setting( $name )
 						->set_title( $this->get_root()->$name->get_module_title() )
 						->set_description( $this->get_root()->$name->get_module_desc() )
 						->load_type( 'checkbox' );
 				} else {
-					$this->sv_modules->get_settings()[ $name ]
+					$this->sv_modules->get_setting( $name )
 						->set_title( $name )
 						->set_description( __( 'Description is available once activated.', 'sv100' ) )
 						->load_type( 'checkbox' );
@@ -162,27 +162,29 @@ class init extends \sv_core\core {
 	private function load_module_check( string $name, string $path, bool $required = false ): bool {
 		// Module file does not exist
 		if ( ! file_exists( $path . $name . '.php' ) ) {
+			error_log(__('Tried to load theme module which does not exist: ', 'sv100').$path . $name . '.php');
 			return false;
 		}
-		
+
 		/* required Modules */
 		if($required === true){
+			//error_log(__('Required Module loaded: ', 'sv100').$path . $name . '.php');
 			return true;
 		}
-		
-		if ( $name === 'sv_modules' ) {
-			return true;
-		}
-		
+
 		// not set yet
-		if ( isset( $this->sv_modules ) && $this->sv_modules->get_settings()[ $name ]->run_type()->get_data() === false ) {
+		if ( isset( $this->sv_modules ) && $this->sv_modules->get_setting( $name )->get_data() === false ) {
+			//error_log(__('Module without Activation-Setting loaded: ', 'sv100').$path . $name . '.php');
 			return true;
 		}
 		
 		// set active
-		if ( isset( $this->sv_modules ) && intval( $this->sv_modules->get_settings()[ $name ]->run_type()->get_data() ) === 1 ) {
+		if ( isset( $this->sv_modules ) && intval( $this->sv_modules->get_setting( $name )->get_data() ) === 1 ) {
+			//error_log(__('Active Module loaded: ', 'sv100').$path . $name . '.php');
 			return true;
 		}
+
+		//error_log(__('Tried to load theme module which is disabled: ', 'sv100').$path . $name . '.php');
 		
 		return false;
 	}
@@ -345,7 +347,7 @@ class init extends \sv_core\core {
 				
 				foreach ( $module->s as $setting => $value ) {
 					if ( isset( $value ) && ! empty( $value ) ) {
-						$module_settings[ $setting ] = $value->run_type()->get_data();
+						$module_settings[ $setting ] = $value->get_data();
 					}
 				}
 				
@@ -363,7 +365,7 @@ class init extends \sv_core\core {
 			$name				= static::$scripts->get_prefix( 'settings_' . $script->get_UID() );
 			
 			if ( isset( static::$scripts->s[ $script->get_UID() ] ) ) {
-				$settings[ $name ] 	= static::$scripts->s[ $script->get_UID() ]->run_type()->get_data();
+				$settings[ $name ] 	= static::$scripts->s[ $script->get_UID() ]->get_data();
 			}
 		}
 		
