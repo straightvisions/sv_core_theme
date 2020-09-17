@@ -212,12 +212,20 @@ class init extends \sv_core\core {
 				$this->$name->set_name( $this->get_root()->get_prefix( $this->$name->get_module_name() ) );
 				$this->$name->set_path( $child_path );
 				$this->$name->set_url( $child_url );
+
+				if(is_admin()){
+					$this->$name->load_settings()->register_scripts();
+				}
 			} else {
 				$class_name  = $this->get_root()->get_name() . '\\' . $name;
 				$this->get_root()->$name = new $class_name();
 				$this->get_root()->$name->set_name( $this->get_root()->get_prefix( $this->get_root()->$name->get_module_name() ) );
 				$this->get_root()->$name->set_path( $path );
 				$this->get_root()->$name->set_url( $url );
+
+				if(is_admin()){
+					$this->get_root()->$name->load_settings()->register_scripts();
+				}
 			}
 			
 			$this->get_root()->$name->set_root( $this->get_root() );
@@ -230,6 +238,13 @@ class init extends \sv_core\core {
 		} else {
 			return false;
 		}
+	}
+
+	protected function load_settings(){
+		return $this;
+	}
+	protected function register_scripts(){
+		return $this;
 	}
 	
 	private function set_is_child_theme( bool $value ) {
