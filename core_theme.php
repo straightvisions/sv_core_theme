@@ -161,7 +161,7 @@ class init extends \sv_core\core {
 	
 	private function load_module_check( string $name, string $path, bool $required = false ): bool {
 		// Module file does not exist
-		if ( ! file_exists( $path . $name . '.php' ) ) {
+		if ( ! is_file( $path . $name . '.php' ) ) {
 			error_log(__('Tried to load theme module which does not exist: ', 'sv100').$path . $name . '.php');
 			return false;
 		}
@@ -174,6 +174,7 @@ class init extends \sv_core\core {
 
 		// not set yet
 		if ( isset( $this->sv_modules ) && $this->sv_modules->get_setting( $name )->get_data() === false ) {
+			$this->sv_modules->get_setting( $name )->set_data(1);
 			//error_log(__('Module without Activation-Setting loaded: ', 'sv100').$path . $name . '.php');
 			return true;
 		}
@@ -200,7 +201,7 @@ class init extends \sv_core\core {
 			// Checks for child theme & child module
 			$child_module = $this->get_active_theme_path() . 'lib/modules/' . $name;
 
-			if ( $this->is_child_theme() && file_exists( $child_module ) ) {
+			if ( $this->is_child_theme() && is_file( $child_module ) ) {
 				$child_path       = trailingslashit( $child_module );
 				$child_url        = $this->get_active_theme_url() . 'lib/modules/' . $name . '/';
 				$child_class_name = $this->get_name() . '_child\\' . $name;
@@ -264,7 +265,7 @@ class init extends \sv_core\core {
 		
 		if ( $this->is_child_theme() ) {
 			$active_theme_file_path = $this->get_active_theme_path() . 'lib/'. $module.$suffix;
-			if ( file_exists( $active_theme_file_path ) ) {
+			if ( is_file( $active_theme_file_path ) ) {
 				return $active_theme_file_path;
 			}
 		}
@@ -285,7 +286,7 @@ class init extends \sv_core\core {
 			$active_theme_file_path = $this->get_active_theme_path() . 'lib/modules/' . $object->get_module_name() . '/' . $suffix;
 			$active_theme_file_url  = $this->get_active_theme_url() . 'lib/modules/' . $object->get_module_name() . '/' . $suffix;
 			
-			if ( file_exists( $active_theme_file_path ) ) {
+			if ( is_file( $active_theme_file_path ) ) {
 				return $active_theme_file_url;
 			}
 		}
@@ -293,12 +294,12 @@ class init extends \sv_core\core {
 		$root_theme_file_path = $this->get_parent_theme_path() . 'lib/modules/' . $object->get_module_name() . '/' . $suffix;
 		$root_theme_file_url  = $this->get_parent_theme_url() . 'lib/modules/' . $object->get_module_name() . '/' . $suffix;
 		
-		if ( file_exists( $root_theme_file_path ) ) {
+		if ( is_file( $root_theme_file_path ) ) {
 			return $root_theme_file_url;
 		} else {
 			// check if this is a child and files are in parent
 			$root_theme_file_path = $this->get_parent_theme_path() . 'lib/modules/' . $object->get_parent()->get_module_name() . '/' . $suffix;
-			if ( file_exists( $root_theme_file_path ) ) {
+			if ( is_file( $root_theme_file_path ) ) {
 				$root_theme_file_url = $this->get_parent_theme_url() . 'lib/modules/' . $object->get_parent()->get_module_name() . '/' . $suffix;
 				
 				return $root_theme_file_url;
