@@ -216,6 +216,10 @@ class init extends \sv_core\core {
 				if(is_admin()){
 					$this->$name->load_settings()->register_scripts();
 				}
+
+				add_action('wp', array($this->$name,'enqueue_scripts'));
+				add_action('admin_init', array($this->$name,'enqueue_scripts'));
+
 			} else {
 				$class_name  = $this->get_root()->get_name() . '\\' . $name;
 				$this->get_root()->$name = new $class_name();
@@ -226,6 +230,9 @@ class init extends \sv_core\core {
 				if(is_admin()){
 					$this->get_root()->$name->load_settings()->register_scripts();
 				}
+
+				add_action('wp', array($this->get_root()->$name,'enqueue_scripts'));
+				add_action('admin_init', array($this->get_root()->$name,'enqueue_scripts'));
 			}
 			
 			$this->get_root()->$name->set_root( $this->get_root() );
@@ -244,6 +251,9 @@ class init extends \sv_core\core {
 		return $this;
 	}
 	protected function register_scripts(){
+		return $this;
+	}
+	public function enqueue_scripts() {
 		return $this;
 	}
 	
