@@ -201,7 +201,7 @@ class init extends \sv_core\core {
 			// Checks for child theme & child module
 			$child_module = $this->get_active_theme_path() . 'lib/modules/' . $name;
 
-			if ( $this->is_child_theme() && is_file( $child_module ) ) {
+			if ( $this->is_child_theme() && file_exists( $child_module ) ) {
 				$child_path       = trailingslashit( $child_module );
 				$child_url        = $this->get_active_theme_url() . 'lib/modules/' . $name . '/';
 				$child_class_name = $this->get_name() . '_child\\' . $name;
