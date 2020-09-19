@@ -25,6 +25,9 @@ class init extends \sv_core\core {
 	protected static $modules_loaded 			= array();
 	protected $module_title 					= false;
 	protected $module_desc 						= false;
+
+	//protected $module_css_cache					= true;
+
 	private $first_load							= false;
 	protected static $settings_components		= false;
 	protected $is_child_module					= false;
@@ -251,6 +254,29 @@ class init extends \sv_core\core {
 		return $this;
 	}
 	protected function register_scripts(){
+		// Register Styles
+		$this->get_script( 'common' )->set_is_gutenberg();
+		$this->get_script( 'config' )->set_is_gutenberg();
+
+		if(is_admin() && filesize( $this->get_path('lib/js/backend/block_extra_styles.js') ) > 0){
+			$this->get_script('block_extra_styles')
+				->set_path('lib/js/backend/block_extra_styles.js')
+				->set_type('js')
+				->set_is_gutenberg()
+				->set_is_backend()
+				->set_deps(array('wp-blocks', 'wp-dom'))
+				->set_is_enqueued();
+		}
+
+		if(is_admin() && filesize( $this->get_path('lib/js/backend/init.js') ) > 0){
+			$this->get_script( 'js_backend_init' )
+				->set_path( 'lib/js/backend/init.js' )
+				->set_type( 'js' )
+				->set_is_backend()
+				->set_deps( array(  'jquery' ) )
+				->set_is_enqueued();
+		}
+
 		return $this;
 	}
 	public function enqueue_scripts() {
