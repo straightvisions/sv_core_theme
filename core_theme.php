@@ -216,10 +216,6 @@ class init extends \sv_core\core {
 				$this->$name->set_path( $child_path );
 				$this->$name->set_url( $child_url );
 
-				if(is_admin()){
-					$this->$name->load_settings()->register_scripts();
-				}
-
 				add_action('wp', array($this->$name,'enqueue_scripts'));
 				add_action('admin_init', array($this->$name,'enqueue_scripts'));
 
@@ -230,33 +226,45 @@ class init extends \sv_core\core {
 				$this->get_root()->$name->set_path( $path );
 				$this->get_root()->$name->set_url( $url );
 
-				if(is_admin()){
-					$this->get_root()->$name->load_settings()->register_scripts();
-				}
-
 				add_action('wp', array($this->get_root()->$name,'enqueue_scripts'));
 				add_action('admin_init', array($this->get_root()->$name,'enqueue_scripts'));
 			}
-			
+
 			$this->get_root()->$name->set_root( $this->get_root() );
 			$this->get_root()->$name->set_parent( $this );
 			$this->get_root()->$name->init();
-			
+
 			$this->set_modules_loaded($this->get_root()->$name->get_prefix(), $this->get_root()->$name);
+
+			$this->get_root()->$name->init_admin();
 
 			return true;
 		} else {
 			return false;
 		}
 	}
-
+	protected function init_admin() {
+		if(is_admin()){
+			$this->get_module($this->get_module_name())->load_settings()->register_scripts();
+			foreach($this->get_scripts() as $script){
+					$script->set_is_enqueued();
+			}
+		}
+	}
 	protected function load_settings(){
 		return $this;
 	}
 	protected function register_scripts(){
 		// Register Styles
-		$this->get_script( 'common' )->set_is_gutenberg();
-		$this->get_script( 'config' )->set_is_gutenberg();
+		$this->get_script( 'common' )
+			->set_path( 'lib/css/common/common.css' )
+			->set_is_gutenberg()
+			->set_is_enqueued();
+
+		$this->get_script( 'config' )
+			->set_path( 'lib/css/config/init.php' )
+			->set_is_gutenberg()
+			->set_is_enqueued();
 
 		if(is_admin() && filesize( $this->get_path('lib/js/backend/block_extra_styles.js') ) > 0){
 			$this->get_script('block_extra_styles')
@@ -344,7 +352,7 @@ class init extends \sv_core\core {
 		
 		$root_theme_file_path = $this->get_parent_theme_path() . 'lib/modules/' . $object->get_module_name() . '/' . $suffix;
 		$root_theme_file_url  = $this->get_parent_theme_url() . 'lib/modules/' . $object->get_module_name() . '/' . $suffix;
-		
+
 		if ( is_file( $root_theme_file_path ) ) {
 			return $root_theme_file_url;
 		} else {
