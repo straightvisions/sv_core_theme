@@ -26,8 +26,6 @@ class init extends \sv_core\core {
 	protected $module_title 					= false;
 	protected $module_desc 						= false;
 
-	//protected $module_css_cache					= true;
-
 	private $first_load							= false;
 	protected static $settings_components		= false;
 	protected $is_child_module					= false;
@@ -271,7 +269,6 @@ class init extends \sv_core\core {
 				->set_path('lib/js/backend/block_extra_styles.js')
 				->set_type('js')
 				->set_is_gutenberg()
-				->set_is_backend()
 				->set_deps(array('wp-blocks', 'wp-dom'))
 				->set_is_enqueued();
 		}
