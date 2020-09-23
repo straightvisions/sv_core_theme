@@ -253,33 +253,35 @@ class init extends \sv_core\core {
 		return $this;
 	}
 	protected function register_scripts(){
-		// Register Styles
-		$this->get_script( 'common' )
-			->set_path( 'lib/css/common/common.css' )
-			->set_is_gutenberg()
-			->set_is_enqueued();
-
-		$this->get_script( 'config' )
-			->set_path( 'lib/css/config/init.php' )
-			->set_is_gutenberg()
-			->set_is_enqueued();
-
-		if(is_admin() && filesize( $this->get_path('lib/js/backend/block_extra_styles.js') ) > 0){
-			$this->get_script('block_extra_styles')
-				->set_path('lib/js/backend/block_extra_styles.js')
-				->set_type('js')
+		if($this->get_css_cache_active()) {
+			// Register Styles
+			$this->get_script('common')
+				->set_path('lib/css/common/common.css')
 				->set_is_gutenberg()
-				->set_deps(array('wp-blocks', 'wp-dom'))
 				->set_is_enqueued();
-		}
 
-		if(is_admin() && filesize( $this->get_path('lib/js/backend/init.js') ) > 0){
-			$this->get_script( 'js_backend_init' )
-				->set_path( 'lib/js/backend/init.js' )
-				->set_type( 'js' )
-				->set_is_backend()
-				->set_deps( array(  'jquery' ) )
+			$this->get_script('config')
+				->set_path('lib/css/config/init.php')
+				->set_is_gutenberg()
 				->set_is_enqueued();
+
+			if (is_admin() && filesize($this->get_path('lib/js/backend/block_extra_styles.js')) > 0) {
+				$this->get_script('block_extra_styles')
+					->set_path('lib/js/backend/block_extra_styles.js')
+					->set_type('js')
+					->set_is_gutenberg()
+					->set_deps(array('wp-blocks', 'wp-dom'))
+					->set_is_enqueued();
+			}
+
+			if (is_admin() && filesize($this->get_path('lib/js/backend/init.js')) > 0) {
+				$this->get_script('js_backend_init')
+					->set_path('lib/js/backend/init.js')
+					->set_type('js')
+					->set_is_backend()
+					->set_deps(array('jquery'))
+					->set_is_enqueued();
+			}
 		}
 
 		return $this;
