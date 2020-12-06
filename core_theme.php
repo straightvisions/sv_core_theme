@@ -256,13 +256,13 @@ class init extends \sv_core\core {
 	protected function register_scripts(){
 		if($this->get_css_cache_active()) {
 			// Register Styles
-			$this->get_script('common')
-				->set_path('lib/css/common/common.css')
+			$this->get_script('config')
+				->set_path('lib/css/config/init.php')
 				->set_is_gutenberg()
 				->set_is_enqueued();
 
-			$this->get_script('config')
-				->set_path('lib/css/config/init.php')
+			$this->get_script('common')
+				->set_path('lib/css/common/common.css')
 				->set_is_gutenberg()
 				->set_is_enqueued();
 
