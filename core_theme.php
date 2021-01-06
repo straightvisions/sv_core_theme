@@ -13,8 +13,8 @@ namespace sv100;
 require_once( 'core/core.php' );
 
 class init extends \sv_core\core {
-	const version 								= 1500; // should match version in style.css and readme.txt
-	const version_core_match 					= 5000;
+	const version 								= 1513; // should match version in style.css and readme.txt
+	const version_core_match 					= 5104;
 	
 	public static $is_child_theme 				= false;
 	private $modules_registered 				= array();
@@ -25,6 +25,7 @@ class init extends \sv_core\core {
 	protected static $modules_loaded 			= array();
 	protected $module_title 					= false;
 	protected $module_desc 						= false;
+
 	private $first_load							= false;
 	protected static $settings_components		= false;
 	protected $is_child_module					= false;
@@ -39,10 +40,11 @@ class init extends \sv_core\core {
 		}
 		
 		load_theme_textdomain( 'sv100', get_template_directory() . '/languages' );
-		
-		$this->set_section_title( __( 'SV100', 'sv100' ) );
-		$this->set_section_desc( __( 'SV100 Theme', 'sv100' ) );
-		
+
+		$this->set_section_title( __( 'SV100', 'sv100' ) )
+		->set_section_desc( __( 'SV100 Theme', 'sv100' ) )
+		->set_section_type('');
+
 		static::$active_theme_path = trailingslashit( get_stylesheet_directory() );
 		static::$parent_theme_path = trailingslashit( get_template_directory() );
 		static::$active_theme_url  = trailingslashit( get_stylesheet_directory_uri() );
@@ -213,10 +215,6 @@ class init extends \sv_core\core {
 				$this->$name->set_path( $child_path );
 				$this->$name->set_url( $child_url );
 
-				if(is_admin()){
-					$this->$name->load_settings()->register_scripts();
-				}
-
 				add_action('wp', array($this->$name,'enqueue_scripts'));
 				add_action('admin_init', array($this->$name,'enqueue_scripts'));
 
@@ -227,30 +225,66 @@ class init extends \sv_core\core {
 				$this->get_root()->$name->set_path( $path );
 				$this->get_root()->$name->set_url( $url );
 
-				if(is_admin()){
-					$this->get_root()->$name->load_settings()->register_scripts();
-				}
-
 				add_action('wp', array($this->get_root()->$name,'enqueue_scripts'));
 				add_action('admin_init', array($this->get_root()->$name,'enqueue_scripts'));
 			}
-			
+
 			$this->get_root()->$name->set_root( $this->get_root() );
 			$this->get_root()->$name->set_parent( $this );
 			$this->get_root()->$name->init();
-			
+
 			$this->set_modules_loaded($this->get_root()->$name->get_prefix(), $this->get_root()->$name);
+
+			$this->get_root()->$name->init_admin();
 
 			return true;
 		} else {
 			return false;
 		}
 	}
-
+	protected function init_admin() {
+		if(is_admin()){
+			$this->get_module($this->get_module_name())->load_settings()->register_scripts();
+			foreach($this->get_scripts() as $script){
+					$script->set_is_enqueued();
+			}
+		}
+	}
 	protected function load_settings(){
 		return $this;
 	}
 	protected function register_scripts(){
+		if($this->get_css_cache_active()) {
+			// Register Styles
+			$this->get_script('config')
+				->set_path('lib/css/config/init.php')
+				->set_is_gutenberg()
+				->set_is_enqueued();
+
+			$this->get_script('common')
+				->set_path('lib/css/common/common.css')
+				->set_is_gutenberg()
+				->set_is_enqueued();
+
+			if (is_admin() && filesize($this->get_path('lib/js/backend/block_extra_styles.js')) > 0) {
+				$this->get_script('block_extra_styles')
+					->set_path('lib/js/backend/block_extra_styles.js')
+					->set_type('js')
+					->set_is_gutenberg()
+					->set_deps(array('wp-blocks', 'wp-dom'))
+					->set_is_enqueued();
+			}
+
+			if (is_admin() && filesize($this->get_path('lib/js/backend/init.js')) > 0) {
+				$this->get_script('js_backend_init')
+					->set_path('lib/js/backend/init.js')
+					->set_type('js')
+					->set_is_backend()
+					->set_deps(array('jquery'))
+					->set_is_enqueued();
+			}
+		}
+
 		return $this;
 	}
 	public function enqueue_scripts() {
@@ -318,7 +352,7 @@ class init extends \sv_core\core {
 		
 		$root_theme_file_path = $this->get_parent_theme_path() . 'lib/modules/' . $object->get_module_name() . '/' . $suffix;
 		$root_theme_file_url  = $this->get_parent_theme_url() . 'lib/modules/' . $object->get_module_name() . '/' . $suffix;
-		
+
 		if ( is_file( $root_theme_file_path ) ) {
 			return $root_theme_file_url;
 		} else {
