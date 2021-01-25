@@ -13,8 +13,8 @@ namespace sv100;
 require_once( 'core/core.php' );
 
 class init extends \sv_core\core {
-	const version 								= 1513; // should match version in style.css and readme.txt
-	const version_core_match 					= 5104;
+	const version 								= 1514; // should match version in style.css and readme.txt
+	const version_core_match 					= 5105;
 	
 	public static $is_child_theme 				= false;
 	private $modules_registered 				= array();
@@ -40,6 +40,10 @@ class init extends \sv_core\core {
 		}
 		
 		load_theme_textdomain( 'sv100', get_template_directory() . '/languages' );
+
+		if(get_template_directory() !== get_stylesheet_directory()){
+			load_theme_textdomain( 'sv100', get_stylesheet_directory() . '/languages' );
+		}
 
 		$this->set_section_title( __( 'SV100', 'sv100' ) )
 		->set_section_desc( __( 'SV100 Theme', 'sv100' ) )
