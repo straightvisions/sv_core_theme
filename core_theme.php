@@ -28,8 +28,7 @@ class init extends \sv_core\core {
 
 	private $first_load							= false;
 	protected static $settings_components		= false;
-	protected $is_child_module					= false;
-	
+
 	protected static $scripts_loaded 			= false;
 	protected static $theme_core_initialized	= false;
 	protected $has_sidebar						= false;
@@ -204,7 +203,7 @@ class init extends \sv_core\core {
 		if ( $this->load_module_check( $name, $path, $required ) ) {
 			require_once( $path . $name . '.php' );
 			
-			// Checks for child theme & child module
+			// Checks for child theme
 			$child_module = $this->get_active_theme_path() . 'lib/modules/' . $name;
 
 			if ( $this->is_child_theme() && file_exists( $child_module ) ) {
@@ -303,25 +302,9 @@ class init extends \sv_core\core {
 		return static::$is_child_theme;
 	}
 
-	protected function set_is_child_module() {
-		$this->is_child_module			= true;
-
-		return $this;
-	}
-
-	protected function get_is_child_module() {
-		return $this->is_child_module;
-	}
-
 	public function get_path( string $suffix = ''): string {
-		if($this->get_is_child_module()){
-			$object = $this->get_parent();
-		}else{
-			$object = $this;
-		}
-
-		if($object->get_module_name() != 'init'){
-			$module			= 'modules/'.$object->get_module_name() . '/';
+		if($this->get_module_name() != 'init'){
+			$module			= 'modules/'.$this->get_module_name() . '/';
 		}else {
 			$module			= '';
 		}
@@ -339,31 +322,25 @@ class init extends \sv_core\core {
 	}
 
 	public function get_url( string $suffix = ''): string {
-		if($this->get_is_child_module()){
-			$object = $this->get_parent();
-		}else{
-			$object = $this;
-		}
-
 		if ( $this->is_child_theme() ) {
-			$active_theme_file_path = $this->get_active_theme_path() . 'lib/modules/' . $object->get_module_name() . '/' . $suffix;
-			$active_theme_file_url  = $this->get_active_theme_url() . 'lib/modules/' . $object->get_module_name() . '/' . $suffix;
+			$active_theme_file_path = $this->get_active_theme_path() . 'lib/modules/' . $this->get_module_name() . '/' . $suffix;
+			$active_theme_file_url  = $this->get_active_theme_url() . 'lib/modules/' . $this->get_module_name() . '/' . $suffix;
 			
 			if ( is_file( $active_theme_file_path ) ) {
 				return $active_theme_file_url;
 			}
 		}
 		
-		$root_theme_file_path = $this->get_parent_theme_path() . 'lib/modules/' . $object->get_module_name() . '/' . $suffix;
-		$root_theme_file_url  = $this->get_parent_theme_url() . 'lib/modules/' . $object->get_module_name() . '/' . $suffix;
+		$root_theme_file_path = $this->get_parent_theme_path() . 'lib/modules/' . $this->get_module_name() . '/' . $suffix;
+		$root_theme_file_url  = $this->get_parent_theme_url() . 'lib/modules/' . $this->get_module_name() . '/' . $suffix;
 
 		if ( is_file( $root_theme_file_path ) ) {
 			return $root_theme_file_url;
 		} else {
 			// check if this is a child and files are in parent
-			$root_theme_file_path = $this->get_parent_theme_path() . 'lib/modules/' . $object->get_parent()->get_module_name() . '/' . $suffix;
+			$root_theme_file_path = $this->get_parent_theme_path() . 'lib/modules/' . $this->get_parent()->get_module_name() . '/' . $suffix;
 			if ( is_file( $root_theme_file_path ) ) {
-				$root_theme_file_url = $this->get_parent_theme_url() . 'lib/modules/' . $object->get_parent()->get_module_name() . '/' . $suffix;
+				$root_theme_file_url = $this->get_parent_theme_url() . 'lib/modules/' . $this->get_parent()->get_module_name() . '/' . $suffix;
 				
 				return $root_theme_file_url;
 			} else {
@@ -478,7 +455,7 @@ class init extends \sv_core\core {
 
 	public function get_visibility(string $field): bool{
 		global $post;
-
+/*
 		if ( $post ) {
 			$metabox_data = get_post_meta(
 				$post->ID,
@@ -498,7 +475,7 @@ class init extends \sv_core\core {
 		if(!isset($data)){
 			$data = $this->get_child_module('metabox')->get_setting('show_'.$field)->get_data();
 		}
-
+*/
 		return boolval($data);
 	}
 }
