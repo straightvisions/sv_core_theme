@@ -326,7 +326,7 @@ class init extends \sv_core\core {
 			$active_theme_file_path = $this->get_active_theme_path() . 'lib/modules/' . $this->get_module_name() . '/' . $suffix;
 			$active_theme_file_url  = $this->get_active_theme_url() . 'lib/modules/' . $this->get_module_name() . '/' . $suffix;
 			
-			if ( is_file( $active_theme_file_path ) ) {
+			if ( is_file( $active_theme_file_path ) || is_dir($active_theme_file_path) ) {
 				return $active_theme_file_url;
 			}
 		}
@@ -334,12 +334,12 @@ class init extends \sv_core\core {
 		$root_theme_file_path = $this->get_parent_theme_path() . 'lib/modules/' . $this->get_module_name() . '/' . $suffix;
 		$root_theme_file_url  = $this->get_parent_theme_url() . 'lib/modules/' . $this->get_module_name() . '/' . $suffix;
 
-		if ( is_file( $root_theme_file_path ) ) {
+		if ( is_file( $root_theme_file_path ) || is_dir($root_theme_file_path) ) {
 			return $root_theme_file_url;
 		} else {
 			// check if this is a child and files are in parent
 			$root_theme_file_path = $this->get_parent_theme_path() . 'lib/modules/' . $this->get_parent()->get_module_name() . '/' . $suffix;
-			if ( is_file( $root_theme_file_path ) ) {
+			if ( is_file( $root_theme_file_path ) || is_dir($root_theme_file_path) ) {
 				$root_theme_file_url = $this->get_parent_theme_url() . 'lib/modules/' . $this->get_parent()->get_module_name() . '/' . $suffix;
 				
 				return $root_theme_file_url;
