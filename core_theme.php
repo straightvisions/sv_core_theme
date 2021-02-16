@@ -269,7 +269,7 @@ class init extends \sv_core\core {
 				->set_is_gutenberg()
 				->set_is_enqueued();
 
-			if (is_admin() && filesize($this->get_path('lib/js/backend/block_extra_styles.js')) > 0) {
+			if (is_admin() && file_exists($this->get_path('lib/js/backend/block_extra_styles.js')) && filesize($this->get_path('lib/js/backend/block_extra_styles.js')) > 0) {
 				$this->get_script('block_extra_styles')
 					->set_path('lib/js/backend/block_extra_styles.js')
 					->set_type('js')
@@ -278,7 +278,7 @@ class init extends \sv_core\core {
 					->set_is_enqueued();
 			}
 
-			if (is_admin() && filesize($this->get_path('lib/js/backend/init.js')) > 0) {
+			if (is_admin() && file_exists($this->get_path('lib/js/backend/init.js')) && filesize($this->get_path('lib/js/backend/init.js')) > 0) {
 				$this->get_script('js_backend_init')
 					->set_path('lib/js/backend/init.js')
 					->set_type('js')
@@ -475,8 +475,9 @@ class init extends \sv_core\core {
 		if(!isset($data)){
 			$data = $this->get_child_module('metabox')->get_setting('show_'.$field)->get_data();
 		}
-*/
-		return boolval($data);
+
+		return boolval($data);*/
+		return false;
 	}
 }
 
