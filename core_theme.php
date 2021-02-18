@@ -37,12 +37,12 @@ class init extends \sv_core\core {
 		if(!$this->setup( __NAMESPACE__, __FILE__ . '../' )){
 			return false;
 		}
-		
-		load_theme_textdomain( 'sv100', get_template_directory() . '/languages' );
 
 		if(get_template_directory() !== get_stylesheet_directory()){
 			load_theme_textdomain( 'sv100', get_stylesheet_directory() . '/languages' );
 		}
+		
+		load_theme_textdomain( 'sv100', get_template_directory() . '/languages' );
 
 		$this->set_section_title( __( 'SV100', 'sv100' ) )
 		->set_section_desc( __( 'SV100 Theme', 'sv100' ) )
