@@ -4,7 +4,7 @@ namespace sv100;
 /**
  * @author			straightvisions GmbH
  * @package			sv100
- * @copyright       2019 straightvisions GmbH
+ * @copyright	   2019 straightvisions GmbH
  * @link			https://straightvisions.com
  * @since			1.0
  * @license			See license.txt or https://straightvisions.com
@@ -207,8 +207,8 @@ class init extends \sv_core\core {
 			$child_module = $this->get_active_theme_path() . 'lib/modules/' . $name;
 
 			if ( $this->is_child_theme() && file_exists( $child_module ) ) {
-				$child_path       = trailingslashit( $child_module );
-				$child_url        = $this->get_active_theme_url() . 'lib/modules/' . $name . '/';
+				$child_path	   = trailingslashit( $child_module );
+				$child_url		= $this->get_active_theme_url() . 'lib/modules/' . $name . '/';
 				$child_class_name = $this->get_name() . '_child\\' . $name;
 				
 				require_once( $child_path . $name . '.php' );
