@@ -453,33 +453,6 @@ class init extends \sv_core\core {
 
 		return parent::get_responsive_subpage( $title, $template_path, $new_breakpoints );
 	}
-
-	public function get_visibility(string $field): bool{
-		global $post;
-/*
-		if ( $post ) {
-			$metabox_data = get_post_meta(
-				$post->ID,
-				$this->get_child_module('metabox')
-					->get_setting( 'show_' . $field )
-					->get_prefix( $this->get_setting( 'show_' . $field )->get_ID() ),
-				true
-			);
-
-			if($metabox_data == 'hidden'){
-				$data = 0;
-			}elseif($metabox_data == 'show'){
-				$data = 1;
-			}
-		}
-
-		if(!isset($data)){
-			$data = $this->get_child_module('metabox')->get_setting('show_'.$field)->get_data();
-		}
-
-		return boolval($data);*/
-		return false;
-	}
 }
 
 $sv100 = new init();
