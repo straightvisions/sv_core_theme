@@ -22,7 +22,6 @@ class init extends \sv_core\core {
 	protected static $parent_theme_path 		= '';
 	protected static $active_theme_url 			= '';
 	protected static $parent_theme_url 			= '';
-	protected static $modules_loaded 			= array();
 	protected $module_title 					= false;
 	protected $module_desc 						= false;
 
@@ -214,9 +213,10 @@ class init extends \sv_core\core {
 				require_once( $child_path . $name . '.php' );
 				
 				$this->$name = new $child_class_name();
-				$this->$name->set_name( $this->get_root()->get_prefix( $this->$name->get_module_name() ) );
-				$this->$name->set_path( $child_path );
-				$this->$name->set_url( $child_url );
+				$this->$name
+					->set_name( $this->get_root()->get_prefix( $this->$name->get_module_name() ) )
+					->set_path( $child_path )
+					->set_url( $child_url );
 
 				add_action('wp', array($this->$name,'enqueue_scripts'));
 				add_action('admin_init', array($this->$name,'enqueue_scripts'));
@@ -224,17 +224,19 @@ class init extends \sv_core\core {
 			} else {
 				$class_name  = $this->get_root()->get_name() . '\\' . $name;
 				$this->get_root()->$name = new $class_name();
-				$this->get_root()->$name->set_name( $this->get_root()->get_prefix( $this->get_root()->$name->get_module_name() ) );
-				$this->get_root()->$name->set_path( $path );
-				$this->get_root()->$name->set_url( $url );
+				$this->get_root()->$name
+					->set_name( $this->get_root()->get_prefix( $this->get_root()->$name->get_module_name() ) )
+					->set_path( $path )
+					->set_url( $url );
 
 				add_action('wp', array($this->get_root()->$name,'enqueue_scripts'));
 				add_action('admin_init', array($this->get_root()->$name,'enqueue_scripts'));
 			}
 
-			$this->get_root()->$name->set_root( $this->get_root() );
-			$this->get_root()->$name->set_parent( $this );
-			$this->get_root()->$name->init();
+			$this->get_root()->$name
+				->set_root( $this->get_root() )
+				->set_parent( $this )
+				->init();
 
 			$this->set_modules_loaded($this->get_root()->$name->get_prefix(), $this->get_root()->$name);
 
@@ -350,16 +352,6 @@ class init extends \sv_core\core {
 		}
 	}
 
-	protected function set_modules_loaded(string $name, $object){
-		$this->get_root()::$modules_loaded[$name] = $object;
-	}
-	protected function get_modules_loaded(): array {
-		return $this->get_root()::$modules_loaded;
-	}
-	protected function is_module_loaded(string $name): bool{
-		return isset($this->get_modules_loaded()[$this->get_root()->get_prefix($name)]) ? true : false;
-	}
-
 	public function get_module( string $name, bool $required = false ) {
 		if($this->is_module_loaded($name)){
 			return $this->get_modules_loaded()[$this->get_root()->get_prefix($name)];
@@ -378,40 +370,6 @@ class init extends \sv_core\core {
 		}
 
 		return false;
-	}
-	
-	public function get_modules_settings(): array {
-		$settings = array();
-		
-		foreach ( $this->get_modules_loaded() as $prefix => $module ) {
-			if ( $prefix !== 'sv100_sv_settings' && ! empty( $module->s ) ) {
-				$module_settings = array();
-				
-				foreach ( $module->s as $setting => $value ) {
-					if ( isset( $value ) && ! empty( $value ) ) {
-						$module_settings[ $setting ] = $value->get_data();
-					}
-				}
-				
-				$settings[ $prefix ] = $module_settings;
-			}
-		}
-		
-		return $settings;
-	}
-	
-	public function get_scripts_settings(): array {
-		$settings = array();
-		
-		foreach ( static::$scripts->get_scripts() as $script ) {
-			$name				= static::$scripts->get_prefix( 'settings_' . $script->get_UID() );
-			
-			if ( isset( static::$scripts->s[ $script->get_UID() ] ) ) {
-				$settings[ $name ] 	= static::$scripts->s[ $script->get_UID() ]->get_data();
-			}
-		}
-		
-		return $settings;
 	}
 	
 	private function check_first_load(): init {
@@ -436,22 +394,6 @@ class init extends \sv_core\core {
 	}
 	public function has_sidebar(): bool{
 		return $this->has_sidebar;
-	}
-
-	public function get_responsive_subpage( string $title, string $template_path, $breakpoints = array() ): string {
-		$breakpoints = $this->get_breakpoints();
-		$new_breakpoints = array( array_shift( $breakpoints ) );
-
-		// Loops through the sv_common breakpoint setting to see if they have a value
-		foreach ( $breakpoints as $suffix ) {
-			$value = $this->get_module( 'sv_common' )->get_setting( 'breakpoint_' . $suffix )->get_data();
-
-			if ( isset( $value ) && ! empty( $value ) ) {
-				$new_breakpoints[] = $suffix;
-			}
-		}
-
-		return parent::get_responsive_subpage( $title, $template_path, $new_breakpoints );
 	}
 }
 
