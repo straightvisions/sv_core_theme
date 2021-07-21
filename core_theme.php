@@ -13,8 +13,8 @@ namespace sv100;
 require_once( 'core/core.php' );
 
 class init extends \sv_core\core {
-	const version 								= 1710; // should match version in style.css and readme.txt
-	const version_core_match 					= 7000;
+	const version 								= 1800; // should match version in style.css and readme.txt
+	const version_core_match 					= 8000;
 	
 	public static $is_child_theme 				= false;
 	private $modules_registered 				= array();
