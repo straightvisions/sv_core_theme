@@ -13,7 +13,7 @@ namespace sv100;
 require_once( 'core/core.php' );
 
 class init extends \sv_core\core {
-	const version 								= 1801; // should match version in style.css and readme.txt
+	const version 								= 1810; // should match version in style.css and readme.txt
 	const version_core_match 					= 8000;
 	
 	public static $is_child_theme 				= false;
@@ -31,6 +31,8 @@ class init extends \sv_core\core {
 	protected static $scripts_loaded 			= false;
 	protected static $theme_core_initialized	= false;
 	protected $has_sidebar						= false;
+
+	protected $metaboxes						= false;
 	
 	public function init() {
 		if(!$this->setup( __NAMESPACE__, __FILE__ . '../' )){
@@ -394,6 +396,51 @@ class init extends \sv_core\core {
 	}
 	public function has_sidebar(): bool{
 		return $this->has_sidebar;
+	}
+	public function show_part(string $field): bool {
+		global $post;
+
+		if(!$post){
+			return false;
+		}
+
+		$setting = $this->metaboxes->get_data( $post->ID, $this->get_prefix('show_'.$field), $this->get_setting( 'show_'.$field )->get_data() );
+
+		// global settings allow post type based selection and are arrays
+		if(is_array($setting)){
+			// check for current post type
+			if(isset($setting[get_post_type()])){
+				$value = boolval($setting[get_post_type()]);
+			}else{
+				$value = boolval($setting['post']); // post type not found in settings, use post-setting instead as fallback
+			}
+		}else{
+			$value = $setting;
+		}
+
+		return $value;
+	}
+	public function get_metabox_data(string $field): string {
+		global $post;
+
+		if(!$post){
+			return false;
+		}
+
+		$setting = $this->metaboxes->get_data( $post->ID, $this->get_prefix($field), $this->get_setting( $field )->get_data() );
+
+		return strval($setting);
+	}
+	public function get_metabox_data_by_post_type(string $field): string {
+		global $post;
+
+		if(!$post){
+			return false;
+		}
+
+		$setting = $this->metaboxes->get_data( $post->ID, $this->get_prefix($field), $this->get_setting( $field.'_'.get_post_type() )->get_data() );
+
+		return strval($setting);
 	}
 }
 
