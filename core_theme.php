@@ -13,7 +13,7 @@ namespace sv100;
 require_once( 'core/core.php' );
 
 class init extends \sv_core\core {
-	const version 								= 1810; // should match version in style.css and readme.txt
+	const version 								= 1820; // should match version in style.css and readme.txt
 	const version_core_match 					= 8000;
 	
 	public static $is_child_theme 				= false;
@@ -265,6 +265,11 @@ class init extends \sv_core\core {
 			// Register Styles
 			$this->get_script('config')
 				->set_path('lib/css/config/init.php')
+				->set_is_gutenberg()
+				->set_is_enqueued();
+
+			$this->get_script('default')
+				->set_path('lib/css/common/default.css')
 				->set_is_gutenberg()
 				->set_is_enqueued();
 
