@@ -20,8 +20,8 @@ class init extends \sv_core\core {
 	private $modules_registered 				= array();
 	protected static $active_theme_path 		= '';
 	protected static $parent_theme_path 		= '';
-	protected static $active_theme_url 			= '';
-	protected static $parent_theme_url 			= '';
+	protected static $active_theme_url 		= '';
+	protected static $parent_theme_url 		= '';
 	protected $module_title 					= false;
 	protected $module_desc 						= false;
 
@@ -47,7 +47,8 @@ class init extends \sv_core\core {
 
 		$this->set_section_title( __( 'SV100', 'sv100' ) )
 		->set_section_desc( __( 'SV100 Theme', 'sv100' ) )
-		->set_section_type('');
+		->set_section_type('')
+			->set_section_privacy( '<p>' . $this->get_section_title() . __(' does not collect or share any data',  'sv100_companion').'</p>' );
 
 		static::$active_theme_path = trailingslashit( get_stylesheet_directory() );
 		static::$parent_theme_path = trailingslashit( get_template_directory() );
@@ -56,7 +57,7 @@ class init extends \sv_core\core {
 		
 		$this->check_first_load()->init_modules();
 		
-		$this->wordpress_version_check( '5.0.0' );
+		$this->wordpress_version_check( '5.3.2' );
 	}
 	
 	public function wordpress_version_notice() {
