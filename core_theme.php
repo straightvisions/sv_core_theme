@@ -15,7 +15,7 @@ require_once( 'core/core.php' );
 class init extends \sv_core\core {
 	const version 								= 1841; // should match version in style.css and readme.txt
 	const version_core_match 					= 8000;
-	
+
 	public static $is_child_theme 				= false;
 	private $modules_registered 				= array();
 	protected static $active_theme_path 		= '';
@@ -33,7 +33,7 @@ class init extends \sv_core\core {
 	protected $has_sidebar						= false;
 
 	protected $metaboxes						= false;
-	
+
 	public function init() {
 		if(!$this->setup( __NAMESPACE__, __FILE__ . '../' )){
 			return false;
@@ -42,7 +42,7 @@ class init extends \sv_core\core {
 		if(get_template_directory() !== get_stylesheet_directory()){
 			load_theme_textdomain( 'sv100', get_stylesheet_directory() . '/languages' );
 		}
-		
+
 		load_theme_textdomain( 'sv100', get_template_directory() . '/languages' );
 
 		$this->set_section_title( __( 'SV100', 'sv100' ) )
@@ -54,12 +54,12 @@ class init extends \sv_core\core {
 		static::$parent_theme_path = trailingslashit( get_template_directory() );
 		static::$active_theme_url  = trailingslashit( get_stylesheet_directory_uri() );
 		static::$parent_theme_url  = trailingslashit( get_template_directory_uri() );
-		
+
 		$this->check_first_load()->init_modules();
-		
+
 		$this->wordpress_version_check( '5.3.2' );
 	}
-	
+
 	public function wordpress_version_notice() {
 		echo '<div class="error"><p>';
 		/* translators: %s: Minimum required version */
@@ -70,63 +70,63 @@ class init extends \sv_core\core {
 		);
 		echo '</p></div>';
 	}
-	
+
 	public function get_active_theme_path(): string {
 		return static::$active_theme_path;
 	}
-	
+
 	public function get_parent_theme_path(): string {
 		return static::$parent_theme_path;
 	}
-	
+
 	public function get_active_theme_url(): string {
 		return static::$active_theme_url;
 	}
-	
+
 	public function get_parent_theme_url(): string {
 		return static::$parent_theme_url;
 	}
-	
+
 	public function get_modules_registered(): array {
 		return $this->get_root()->modules_registered;
 	}
-	
+
 	public function set_modules_registered( string $path ) {
 		$this->get_root()->modules_registered[ basename( $path ) ] = $path;
 	}
-	
+
 	public function get_module_title(): string {
 		return $this->module_title ? $this->module_title : $this->get_module_name();
 	}
-	
+
 	public function get_module_desc(): string {
 		return $this->module_desc ? $this->module_desc : __( 'No Description defined.', 'sv100' );
 	}
-	
+
 	public function set_module_title( string $title ) {
 		$this->module_title = $title;
-		
+
 		return $this;
 	}
-	
+
 	public function set_module_desc( string $desc ) {
 		$this->module_desc = $desc;
-		
+
 		return $this;
 	}
-	
+
 	public function init_modules(): init {
 		$modules = glob( $this->get_parent_theme_path() . 'lib/modules/*' );
-		
+
 		if ( $this->get_active_theme_path() != $this->get_parent_theme_path() ) {
 			$this->set_is_child_theme( true );
 		}
-		
+
 		// register modules
 		foreach ( $modules as $module ) {
 			$this->set_modules_registered( $module );
 		}
-		
+
 		$this->load_module(
 			'sv_modules',
 			$this->get_parent_theme_path() . 'lib/modules/sv_modules/',
@@ -142,12 +142,12 @@ class init extends \sv_core\core {
 			->load_type( 'checkbox' )
 			->set_disabled( true )
 			->set_data( 1 );
-		
+
 		foreach ( $modules as $module ) {
 			$name = basename( $module );
 			$path = trailingslashit( $module );
 			$url  = trailingslashit( $this->get_parent_theme_url() . 'lib/modules/' . $name );
-			
+
 			if ($name != 'sv_modules') {
 				if ( $this->load_module( $name, $path, $url ) ) {
 					$this->sv_modules->get_setting( $name )
@@ -162,10 +162,10 @@ class init extends \sv_core\core {
 				}
 			}
 		}
-		
+
 		return $this;
 	}
-	
+
 	private function load_module_check( string $name, string $path, bool $required = false ): bool {
 		// Module file does not exist
 		if ( ! is_file( $path . $name . '.php' ) ) {
@@ -185,7 +185,7 @@ class init extends \sv_core\core {
 			//error_log(__('Module without Activation-Setting loaded: ', 'sv100').$path . $name . '.php');
 			return true;
 		}
-		
+
 		// set active
 		if ( isset( $this->sv_modules ) && intval( $this->sv_modules->get_setting( $name )->get_data() ) === 1 ) {
 			//error_log(__('Active Module loaded: ', 'sv100').$path . $name . '.php');
@@ -193,10 +193,10 @@ class init extends \sv_core\core {
 		}
 
 		//error_log(__('Tried to load theme module which is disabled: ', 'sv100').$path . $name . '.php');
-		
+
 		return false;
 	}
-	
+
 	public function load_module( string $name, string $path, string $url, bool $required = false ): bool {
 		if($this->is_module_loaded($name)){ // already loaded
 			return true;
@@ -204,7 +204,7 @@ class init extends \sv_core\core {
 
 		if ( $this->load_module_check( $name, $path, $required ) ) {
 			require_once( $path . $name . '.php' );
-			
+
 			// Checks for child theme
 			$child_module = $this->get_active_theme_path() . 'lib/modules/' . $name;
 
@@ -212,9 +212,9 @@ class init extends \sv_core\core {
 				$child_path	   = trailingslashit( $child_module );
 				$child_url		= $this->get_active_theme_url() . 'lib/modules/' . $name . '/';
 				$child_class_name = $this->get_name() . '_child\\' . $name;
-				
+
 				require_once( $child_path . $name . '.php' );
-				
+
 				$this->$name = new $child_class_name();
 				$this->$name
 					->set_name( $this->get_root()->get_prefix( $this->$name->get_module_name() ) )
@@ -303,11 +303,11 @@ class init extends \sv_core\core {
 	public function enqueue_scripts() {
 		return $this;
 	}
-	
+
 	private function set_is_child_theme( bool $value ) {
 		static::$is_child_theme = $value;
 	}
-	
+
 	private function is_child_theme(): bool {
 		return static::$is_child_theme;
 	}
@@ -326,9 +326,9 @@ class init extends \sv_core\core {
 				return $active_theme_file_path;
 			}
 		}
-		
+
 		$root_theme_file_path = $this->get_parent_theme_path() . 'lib/' . $module . $suffix;
-		
+
 		return $root_theme_file_path;
 	}
 
@@ -336,12 +336,12 @@ class init extends \sv_core\core {
 		if ( $this->is_child_theme() ) {
 			$active_theme_file_path = $this->get_active_theme_path() . 'lib/modules/' . $this->get_module_name() . '/' . $suffix;
 			$active_theme_file_url  = $this->get_active_theme_url() . 'lib/modules/' . $this->get_module_name() . '/' . $suffix;
-			
+
 			if ( file_exists( $active_theme_file_path ) ) {
 				return $active_theme_file_url;
 			}
 		}
-		
+
 		$root_theme_file_path = $this->get_parent_theme_path() . 'lib/modules/' . $this->get_module_name() . '/' . $suffix;
 		$root_theme_file_url  = $this->get_parent_theme_url() . 'lib/modules/' . $this->get_module_name() . '/' . $suffix;
 
@@ -352,7 +352,7 @@ class init extends \sv_core\core {
 			$root_theme_file_path = $this->get_parent_theme_path() . 'lib/modules/' . $this->get_parent()->get_module_name() . '/' . $suffix;
 			if ( file_exists( $root_theme_file_path ) ) {
 				$root_theme_file_url = $this->get_parent_theme_url() . 'lib/modules/' . $this->get_parent()->get_module_name() . '/' . $suffix;
-				
+
 				return $root_theme_file_url;
 			} else {
 				return '';
@@ -372,24 +372,24 @@ class init extends \sv_core\core {
 							trailingslashit( $this->get_root()->get_parent_theme_url() . 'lib/modules/'.$name ),
 							$required
 					   );
-		
+
 		if($loaded){
 			return $this->get_root()->get_modules_loaded()[$this->get_root()->get_prefix($name) ];
 		}
 
 		return false;
 	}
-	
+
 	private function check_first_load(): init {
 		if ( ! get_option( $this->get_prefix( 'first_load' ) ) ) {
 			add_option( $this->get_prefix( 'first_load' ), true );
-			
+
 			$this->first_load = true;
 		}
-		
+
 		return $this;
 	}
-	
+
 	protected function is_first_load() {
 		return $this->get_root()->first_load;
 	}
@@ -442,6 +442,11 @@ class init extends \sv_core\core {
 
 		if(!$post){
 			return false;
+		}
+
+		if ( is_404() ) {
+			$post = get_post( $this->get_setting( '404_page' )->get_data() );
+			setup_postdata($post);
 		}
 
 		$setting = $this->metaboxes->get_data( $post->ID, $this->get_prefix($field), $this->get_setting( $field.'_'.get_post_type() )->get_data() );
