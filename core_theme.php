@@ -444,6 +444,11 @@ class init extends \sv_core\core {
 			return false;
 		}
 
+		if ( is_404() ) {
+			$post = get_post( $this->get_setting( '404_page' )->get_data() );
+			setup_postdata($post);
+		}
+
 		$setting = $this->metaboxes->get_data( $post->ID, $this->get_prefix($field), $this->get_setting( $field.'_'.get_post_type() )->get_data() );
 
 		return strval($setting);
