@@ -1,19 +1,10 @@
 <?php
 namespace sv100;
 
-/**
- * @author			straightvisions GmbH
- * @package			sv100
- * @copyright	   2019 straightvisions GmbH
- * @link			https://straightvisions.com
- * @since			1.0
- * @license			See license.txt or https://straightvisions.com
- */
-
 require_once( 'core/core.php' );
 
 class init extends \sv_core\core {
-	const version 								= 1844; // should match version in style.css and readme.txt
+	const version 								= 1845; // should match version in style.css and readme.txt
 	const version_core_match 					= 8000;
 
 	public static $is_child_theme 				= false;
