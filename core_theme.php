@@ -420,6 +420,11 @@ class init extends \sv_core\core {
 	public function get_metabox_data(string $field): string {
 		global $post;
 
+		if ( is_404() ) {
+			$post = get_post( $this->get_module('sv_content')->get_setting( '404_page' )->get_data() );
+			setup_postdata($post);
+		}
+
 		if(!$post){
 			return false;
 		}
@@ -431,13 +436,13 @@ class init extends \sv_core\core {
 	public function get_metabox_data_by_post_type(string $field): string {
 		global $post;
 
-		if(!$post){
-			return false;
+		if ( is_404() ) {
+			$post = get_post( $this->get_module('sv_content')->get_setting( '404_page' )->get_data() );
+			setup_postdata($post);
 		}
 
-		if ( is_404() ) {
-			$post = get_post( $this->get_setting( '404_page' )->get_data() );
-			setup_postdata($post);
+		if(!$post){
+			return false;
 		}
 
 		$setting = $this->metaboxes->get_data( $post->ID, $this->get_prefix($field), $this->get_setting( $field.'_'.get_post_type() )->get_data() );
