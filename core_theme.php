@@ -4,8 +4,8 @@ namespace sv100;
 require_once( 'core/core.php' );
 
 class init extends \sv_core\core {
-	const version 								= 1900; // should match version in style.css and readme.txt
-	const version_core_match 					= 9000;
+	const version 								= 2000; // should match version in style.css and readme.txt
+	const version_core_match 					= 10000;
 
 	public static $is_child_theme 				= false;
 	private $modules_registered 				= array();
@@ -292,6 +292,14 @@ class init extends \sv_core\core {
 		return $this;
 	}
 	public function enqueue_scripts() {
+		if(!is_admin()){
+			$this->load_settings()->register_scripts();
+		}
+
+		foreach($this->get_scripts() as $script){
+			$script->set_is_enqueued();
+		}
+
 		return $this;
 	}
 
