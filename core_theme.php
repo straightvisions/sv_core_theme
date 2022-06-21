@@ -48,7 +48,7 @@ class init extends \sv_core\core {
 
 		$this->check_first_load()->init_modules();
 
-		$this->wordpress_version_check( '5.3.2' );
+		$this->wordpress_version_check( '6.0' );
 	}
 
 	public function wordpress_version_notice() {
@@ -57,7 +57,7 @@ class init extends \sv_core\core {
 		printf(
 			__( '%1$s requires WordPress %2$s or later to function properly.
 			Please upgrade WordPress before activating %3$s.', 'sv100' ),
-			$this->get_section_title(),'5.0.0', $this->get_section_title()
+			$this->get_section_title(),'6.0', $this->get_section_title()
 		);
 		echo '</p></div>';
 	}
@@ -259,6 +259,12 @@ class init extends \sv_core\core {
 				->set_path('lib/css/config/init.php')
 				->set_is_gutenberg()
 				->set_is_enqueued();
+
+			if(strlen($this->get_block_handle()) > 0){
+				$this->get_script('config')
+				     ->set_ID($this->get_block_handle())
+				     ->set_is_no_prefix();
+			}
 
 			$this->get_script('default')
 				->set_path('lib/css/common/default.css')
