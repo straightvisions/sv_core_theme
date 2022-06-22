@@ -49,6 +49,8 @@ class init extends \sv_core\core {
 		$this->check_first_load()->init_modules();
 
 		$this->wordpress_version_check( '6.0' );
+
+		$this->theme_json_init();
 	}
 
 	public function wordpress_version_notice() {
@@ -277,24 +279,6 @@ class init extends \sv_core\core {
 				->set_is_enqueued();
 		}
 
-		if (is_admin() && file_exists($this->get_path('lib/js/backend/block_extra_styles.js')) && filesize($this->get_path('lib/js/backend/block_extra_styles.js')) > 0) {
-			$this->get_script('block_extra_styles')
-				->set_path('lib/js/backend/block_extra_styles.js')
-				->set_type('js')
-				->set_is_gutenberg()
-				->set_deps(array('wp-blocks', 'wp-dom'))
-				->set_is_enqueued();
-		}
-
-		if (is_admin() && file_exists($this->get_path('lib/js/backend/init.js')) && filesize($this->get_path('lib/js/backend/init.js')) > 0) {
-			$this->get_script('js_backend_init')
-				->set_path('lib/js/backend/init.js')
-				->set_type('js')
-				->set_is_backend()
-				->set_deps(array('jquery'))
-				->set_is_enqueued();
-		}
-
 		return $this;
 	}
 	public function enqueue_scripts() {
@@ -471,6 +455,42 @@ class init extends \sv_core\core {
 		$setting = $this->metaboxes->get_data( $post->ID, $this->get_prefix($field), $this->get_setting( $field.'_'.get_post_type() )->get_data() );
 
 		return strval($setting);
+	}
+	public function theme_json_get_custom_path(){
+		return wp_upload_dir()['basedir'].'/straightvisions/cache/'.$this->get_root()->get_prefix().'/theme.json';
+	}
+	public function theme_json_init(){
+		$file   = $this->theme_json_get_custom_path();
+		$path   = pathinfo($file, PATHINFO_DIRNAME);
+
+		if(is_admin()){
+			// create directories of not exist
+			if (!is_dir($path)) {
+				// dir doesn't exist, make it
+				mkdir($path, 0755, true);
+			}
+
+			// copy original file if not exists
+			if (!file_exists($file)) {
+				copy( $this->get_root()->get_path( '../theme.json' ), $file );
+			}
+		}
+	}
+	public function theme_json_get_data(): array{
+		return json_decode(file_get_contents($this->theme_json_get_custom_path()), true);
+	}
+	public function theme_json_update(){
+		$new     = $this->theme_json_update_data();
+		if($this->theme_json_get_data() !== $new){
+			file_put_contents($this->theme_json_get_custom_path(), json_encode($new));
+			copy( $this->theme_json_get_custom_path(), $this->get_active_theme_path().'theme.json' );
+		}
+
+		return $this;
+	}
+	public function theme_json_update_data(){
+		// override this in child module with new data
+		return $this->theme_json_get_data();
 	}
 }
 
