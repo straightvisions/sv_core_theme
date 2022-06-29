@@ -263,10 +263,10 @@ class init extends \sv_core\core {
 				->set_is_enqueued();
 
 			if(!is_admin()) {
-				$this->get_script( 'config' )->set_inline();
+				//$this->get_script( 'config' )->set_inline();
 
 				if(strlen($this->get_block_handle())){
-					add_action( 'wp_enqueue_scripts', function(){ wp_dequeue_style( $this->get_block_handle() ); });
+					//add_action( 'wp_enqueue_scripts', function(){ wp_dequeue_style( $this->get_block_handle() ); });
 				}
 			}
 
