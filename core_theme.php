@@ -262,7 +262,15 @@ class init extends \sv_core\core {
 				->set_is_gutenberg()
 				->set_is_enqueued();
 
-			if(strlen($this->get_block_handle()) > 0){
+			if(!is_admin()) {
+				$this->get_script( 'config' )->set_inline();
+
+				if(strlen($this->get_block_handle())){
+					add_action( 'wp_enqueue_scripts', function(){ wp_dequeue_style( $this->get_block_handle() ); });
+				}
+			}
+
+			if(strlen($this->get_block_handle())){
 				$this->get_script('config')
 				     ->set_ID($this->get_block_handle())
 				     ->set_is_no_prefix();
@@ -270,11 +278,13 @@ class init extends \sv_core\core {
 
 			$this->get_script('default')
 				->set_path('lib/css/common/default.css')
+				->set_inline()
 				->set_is_gutenberg()
 				->set_is_enqueued();
 
 			$this->get_script('common')
 				->set_path('lib/css/common/common.css')
+				->set_inline()
 				->set_is_gutenberg()
 				->set_is_enqueued();
 		}
