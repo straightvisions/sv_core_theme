@@ -263,10 +263,10 @@ class init extends \sv_core\core {
 				->set_is_enqueued();
 
 			if(!is_admin()) {
-				//$this->get_script( 'config' )->set_inline();
+				$this->get_script( 'config' )->set_inline();
 
 				if(strlen($this->get_block_handle())){
-					//add_action( 'wp_enqueue_scripts', function(){ wp_dequeue_style( $this->get_block_handle() ); });
+					add_action( 'wp_enqueue_scripts', function(){ wp_dequeue_style( $this->get_block_handle() ); });
 				}
 			}
 
@@ -303,9 +303,14 @@ class init extends \sv_core\core {
 				&& $script->get_ID() != 'common'
 				&& $script->get_ID() != 'default'
 			){
-				$script->set_deps(array($this->get_script('config')->get_handle()));
+				// @todo: doesn't work for inline scripts
+				//$script->set_deps(array($this->get_script('config')->get_handle()));
 			}
 
+			// set all theme css inline for pagespeed purposes
+			if($script->get_type() === 'css'){
+				$script->set_inline()->set_is_enqueued();
+			}
 			$script->set_is_enqueued();
 		}
 
