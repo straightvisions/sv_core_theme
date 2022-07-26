@@ -236,7 +236,16 @@ class init extends \sv_core\core {
 
 			$this->set_modules_loaded($this->get_root()->$name->get_prefix(), $this->get_root()->$name);
 
-			$this->get_root()->$name->init_admin();
+			// load scripts in admin and site editor
+			if(is_admin()) {
+				$this->get_root()->$name->init_admin();
+			}else{
+				add_action( 'current_screen', function() use ($name){
+					if(get_current_screen() && get_current_screen()->base === 'site-editor'){
+						$this->get_root()->$name->init_admin();
+					}
+				} );
+			}
 
 			return true;
 		} else {
@@ -244,11 +253,9 @@ class init extends \sv_core\core {
 		}
 	}
 	protected function init_admin() {
-		if(is_admin()){
-			$this->get_module($this->get_module_name())->load_settings()->register_scripts();
-			foreach($this->get_scripts() as $script){
-					$script->set_is_enqueued();
-			}
+		$this->get_module($this->get_module_name())->load_settings()->register_scripts();
+		foreach($this->get_scripts() as $script){
+				$script->set_is_enqueued();
 		}
 	}
 	protected function load_settings(){
@@ -262,13 +269,14 @@ class init extends \sv_core\core {
 				->set_is_gutenberg()
 				->set_is_enqueued();
 
-			if(!is_admin()) {
-				//$this->get_script( 'config' )->set_inline();
+			// if styles are enqueued inline, currently no check is possible to detect if they are actually in use for current page
+			/*if(!is_admin()) {
+				$this->get_script( 'config' )->set_inline();
 
-				if(strlen($this->get_block_handle())){
-					//add_action( 'wp_enqueue_scripts', function(){ wp_dequeue_style( $this->get_block_handle() ); });
+				if(strlen($this->get_block_handle()) > 0){
+					add_action( 'wp_enqueue_scripts', function(){ wp_dequeue_style( $this->get_block_handle() ); });
 				}
-			}
+			}*/
 
 			if(strlen($this->get_block_handle())){
 				$this->get_script('config')
