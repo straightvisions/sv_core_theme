@@ -304,12 +304,13 @@ class init extends \sv_core\core {
 
 		foreach($this->get_scripts() as $script){
 			if(
-				strlen($this->get_block_handle()) > 0
+				$script->get_type() !== 'js'
+				&& strlen($this->get_block_handle()) > 0
 				&& $script->get_ID() != $this->get_block_handle()
 				&& $script->get_ID() != 'common'
 				&& $script->get_ID() != 'default'
 			){
-				$script->set_deps(array($this->get_script('config')->get_handle()));
+				$script->set_deps(array($this->get_script($this->get_block_handle())->get_handle()));
 			}
 
 			$script->set_is_enqueued();
