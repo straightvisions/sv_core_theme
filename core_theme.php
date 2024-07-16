@@ -208,7 +208,8 @@ class init extends \sv_core\core {
 
 				require_once( $child_path . $name . '.php' );
 
-				$this->$name = new $child_class_name();
+				// @todo: deprecated in PHP 8
+				@$this->$name = new $child_class_name();
 				$this->$name
 					->set_name( $this->get_root()->get_prefix( $this->$name->get_module_name() ) )
 					->set_path( $child_path )
@@ -219,7 +220,8 @@ class init extends \sv_core\core {
 
 			} else {
 				$class_name  = $this->get_root()->get_name() . '\\' . $name;
-				$this->get_root()->$name = new $class_name();
+				// @todo: deprecated in PHP 8
+				@$this->get_root()->$name = new $class_name();
 				$this->get_root()->$name
 					->set_name( $this->get_root()->get_prefix( $this->get_root()->$name->get_module_name() ) )
 					->set_path( $path )
